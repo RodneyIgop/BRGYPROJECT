@@ -121,8 +121,56 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   if(form){
     form.addEventListener('submit',e=>{
-      // Remove password match validation - let the backend handle it
+      e.preventDefault();
+      
+      if(pwd.value!==confirmPwd.value){
+        alert('Passwords do not match');
+        confirmPwd.focus();
+        return;
+      }
+
+      // Show loading animation
+      const registerBtn = document.getElementById('registerBtn');
+      registerBtn.classList.add('loading');
+      registerBtn.disabled = true;
+
+      // Submit form via AJAX
+      const formData = new FormData(form);
+      
+      fetch('superadminRegisterProcess.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Hide loading animation
+        registerBtn.classList.remove('loading');
+        registerBtn.disabled = false;
+        
+        if(data.success) {
+          // Show success popup
+          document.getElementById('successPopup').style.display = 'block';
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        // Hide loading animation
+        registerBtn.classList.remove('loading');
+        registerBtn.disabled = false;
+        
+        console.error('Error:', error);
+        alert('An error occurred while submitting your request.');
+      });
     });
   }
+
+  // Success popup handler
+  window.closeSuccessPopup = function() {
+    // Hide popup
+    document.getElementById('successPopup').style.display = 'none';
+    // Redirect to verification page
+    window.location.href = 'superadminVerify.php';
+  };
 });
 

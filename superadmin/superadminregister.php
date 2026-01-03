@@ -241,11 +241,42 @@
             border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
         button.Register:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        button.Register.loading .btn-text {
+            visibility: hidden;
+        }
+
+        button.Register.loading .loading-spinner {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         /* Links */
@@ -528,7 +559,10 @@
 
             <!-- Submit -->
             <div class="form-group full">
-                <button type="submit" class="Register" id="registerBtn">REGISTER</button>
+                <button type="submit" class="Register" id="registerBtn">
+                    <span class="btn-text">REGISTER</span>
+                    <div class="loading-spinner"></div>
+                </button>
             </div>
         </form>
 

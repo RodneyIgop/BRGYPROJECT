@@ -206,21 +206,53 @@
             border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
         button.Register:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
 
-/* Links */
-.register-line {
-    text-align: center;
-    margin-top: 15px;
-}
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
 
-.register-line a {
-    color: #014A7F;
-    font-weight: 600;
-    text-decoration: none;
-}
+        button.Register.loading .btn-text {
+            visibility: hidden;
+        }
+
+        button.Register.loading .loading-spinner {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Links */
+        .register-line {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .register-line a {
+            color: #014A7F;
+            font-weight: 600;
             text-decoration: none;
         }
 
@@ -447,7 +479,10 @@
 
             <!-- Submit -->
             <div class="form-group full">
-                <button type="submit" class="Register" id="registerBtn" disabled>REGISTER</button>
+                <button type="submit" class="Register" id="registerBtn" disabled>
+                    <span class="btn-text">REGISTER</span>
+                    <div class="loading-spinner"></div>
+                </button>
             </div>
         </form>
 

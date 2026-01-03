@@ -8,10 +8,14 @@ require_once '../Connection/PHPMailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Set content type to JSON
+header('Content-Type: application/json');
+
 $required = ['lastname','firstname','contact','birthdate','email','password','confirm_password'];
 foreach ($required as $field) {
     if (empty($_POST[$field])) {
-        die('Missing field: ' . htmlspecialchars($field));
+        echo json_encode(['success' => false, 'message' => 'Missing field: ' . htmlspecialchars($field)]);
+        exit;
     }
 }
 
@@ -25,11 +29,13 @@ $dt = DateTime::createFromFormat('m/d/Y', $birthdateRaw);
 $birthdate = $dt ? $dt->format('Y-m-d') : date('Y-m-d', strtotime($birthdateRaw));
 $birthdateObj = DateTime::createFromFormat('Y-m-d', $birthdate);
 if (!$birthdateObj) {
-    die('Invalid birthdate');
+    echo json_encode(['success' => false, 'message' => 'Invalid birthdate']);
+    exit;
 }
 $today = new DateTime('today');
 if ($birthdateObj > $today) {
-    die('Birthdate cannot be in the future');
+    echo json_encode(['success' => false, 'message' => 'Birthdate cannot be in the future']);
+    exit;
 }
 $age = $birthdateObj->diff($today)->y;
 $email     = trim($_POST['email']);
@@ -37,11 +43,13 @@ $password  = $_POST['password'];
 $confirm   = $_POST['confirm_password'];
 
 if ($password !== $confirm) {
-    die('Passwords do not match');
+    echo json_encode(['success' => false, 'message' => 'Passwords do not match']);
+    exit;
 }
 
 if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]).{8,25}$/', $password)) {
-    die('Password does not meet complexity requirements.');
+    echo json_encode(['success' => false, 'message' => 'Password does not meet complexity requirements.']);
+    exit;
 }
 
 // Check current number of superadmin accounts
@@ -52,7 +60,8 @@ $current_count = $result->fetch_assoc()['count'];
 $stmt->close();
 
 if ($current_count >= 2) {
-    die('Maximum number of superadmin accounts (2) has been reached. No new superadmin accounts can be created at this time.');
+    echo json_encode(['success' => false, 'message' => 'Maximum number of superadmin accounts (2) has been reached. No new superadmin accounts can be created at this time.']);
+    exit;
 }
 
 $stmt = $conn->prepare('SELECT id FROM superadmin WHERE Email = ?');
@@ -60,7 +69,8 @@ $stmt->bind_param('s', $email);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-    die('Email already registered as a superadmin account');
+    echo json_encode(['success' => false, 'message' => 'Email already registered as a superadmin account']);
+    exit;
 }
 $stmt->close();
 
@@ -70,7 +80,8 @@ $stmt->bind_param('s', $email);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-    die('Email already registered as an admin account');
+    echo json_encode(['success' => false, 'message' => 'Email already registered as an admin account']);
+    exit;
 }
 $stmt->close();
 
@@ -80,7 +91,8 @@ $stmt->bind_param('s', $email);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-    die('Email already registered as a resident account');
+    echo json_encode(['success' => false, 'message' => 'Email already registered as a resident account']);
+    exit;
 }
 $stmt->close();
 
@@ -90,7 +102,8 @@ $stmt->bind_param('s', $email);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-    die('Email already has a pending resident request');
+    echo json_encode(['success' => false, 'message' => 'Email already has a pending resident request']);
+    exit;
 }
 $stmt->close();
 
@@ -133,8 +146,9 @@ try {
     $mail->send();
 } catch (Exception $e) {
     unset($_SESSION['pending_superadmin']);
-    die('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+    echo json_encode(['success' => false, 'message' => 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo]);
+    exit;
 }
 
-header('Location: superadminVerify.php');
-exit;
+echo json_encode(['success' => true, 'message' => 'Registration successful. Please check your email for verification code.']);
+?>

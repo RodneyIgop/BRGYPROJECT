@@ -210,6 +210,9 @@ if (form.length) {
     form.on('submit', function(e) {
         e.preventDefault();
         
+        // Show loading animation
+        registerBtn.addClass('loading').prop('disabled', true);
+        
         // Send registration data via AJAX
         $.ajax({
             url: 'residentRegisterProcess.php',
@@ -217,14 +220,19 @@ if (form.length) {
             data: form.serialize(),
             dataType: 'json',
             success: function(response) {
+                // Hide loading animation
+                registerBtn.removeClass('loading').prop('disabled', false);
+                
                 if (response.success) {
-                    // Redirect to verification page
-                    window.location.href = 'residentVerify.php';
+                    // Show success popup
+                    $('#successPopup').css('display', 'block');
                 } else {
                     alert(response.message || 'Registration failed. Please try again.');
                 }
             },
             error: function() {
+                // Hide loading animation
+                registerBtn.removeClass('loading').prop('disabled', false);
                 alert('An error occurred. Please try again.');
             }
         });
@@ -334,10 +342,12 @@ if (form.length) {
         Email - barangay.newera@email.com <br>
         </p>
     `);
-});
 
 // Success popup handler
 window.closeSuccessPopup = function() {
+    // Hide popup
+    $('#successPopup').css('display', 'none');
     // Redirect to login page
-    window.location.href = 'residentlogin.php';
+    window.location.href = 'residentVerify.php';
 };
+});

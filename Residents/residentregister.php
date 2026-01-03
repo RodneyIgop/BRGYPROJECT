@@ -157,37 +157,75 @@ if (isset($_GET['success'])) {
             border: none;
             border-radius: 8px;
             transition: background 0.3s;
+            position: relative;
         }
 
         .register-box button.register:hover {
             background-color: #01365d;
         }
 
-        .register-box .already-account {
-            margin-top: 15px;
-            font-size: 0.95rem;
-            color: #555;
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
 
-        .register-box .loginhere {
+        .register-box button.register.loading .btn-text {
+            visibility: hidden;
+        }
+
+        .register-box button.register.loading .loading-spinner {
             display: block;
-            font-weight: 600;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Success popup */
+        .success-popup {
+            display: none;
+            position: fixed;
+            z-index: 2500;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .success-popup-content {
+            background-color: #fff;
+            margin: 100px auto;
+            padding: 20px;
+            max-width: 400px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .success-popup-content h3 {
             color: #014A7F;
+            margin-bottom: 10px;
         }
 
-        .register-box .loginhere:hover {
-            text-decoration: underline;
-        }
-
-        .register-box .back-home {
-            display: block;
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 10px;
-        }
-
-        .register-box .back-home:hover {
-            text-decoration: underline;
+        .success-popup-btn {
+            padding: 10px 20px;
+            background-color: #014A7F;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         /* Error message */
@@ -444,7 +482,10 @@ if (isset($_GET['success'])) {
 
 
 
-                <button type="submit" id="registerBtn" class="register" disabled>REGISTER</button>
+                <button type="submit" id="registerBtn" class="register" disabled>
+                    <span class="btn-text">REGISTER</span>
+                    <div class="loading-spinner"></div>
+                </button>
             </form>
 
             <p class="already-account">Already have an account?</p>
@@ -468,14 +509,13 @@ if (isset($_GET['success'])) {
         </div>
     </div>
 
-    <!-- <button type="submit" id="registerBtn" class="register" disabled>REGISTER</button> -->
-    <!-- </form> 
-            <br>
-          <div class="checkrow">
-
-            <a class="donthave"> already have an account?</a>
-            <a href="residentlogin.php" class="loginhere">Login here</a>  -->
-
+    <!-- Success Popup -->
+    <div id="successPopup" class="success-popup">
+        <div class="success-popup-content">
+            <h3>Registration Successful</h3>
+            <p style="font-size: 12px; color: #666;">Your account is under review. Please check your email for verification instructions.</p>
+            <button class="success-popup-btn" onclick="closeSuccessPopup()">OK</button>
+        </div>
     </div>
 
     <!-- ================= SCRIPTS ================= -->
