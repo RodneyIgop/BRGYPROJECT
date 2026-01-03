@@ -304,6 +304,7 @@ footer a:hover {
     <a class="navbar-brand d-flex align-items-center" href="#">
       <img src="images/brgylogo.png" class="mr-2">
       <strong>Barangay New Era</strong>
+      <div>hehe</div>
     </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
