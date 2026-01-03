@@ -1,0 +1,133 @@
+/* Global */
+body {
+    margin: 0;
+    background: #f4f6f9;
+    font-family: "Segoe UI", Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ================== Navbar ================== */
+.navbar {
+    background-color: #014A7F;
+    padding: 12px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar img {
+    height: 40px;
+}
+
+.navbar .title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.navbar .title span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.nav-links a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.nav-items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 230px;
+}
+
+/* Card Section */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 95%;
+    max-width: 420px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.card h2 {
+    color: #1A3C80;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    font-size: .95rem;
+    margin-bottom: 22px;
+}
+
+/* Form */
+label {
+    display: block;
+    text-align: left;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+input {
+    width: 94%;
+    padding: 11px 12px;
+    font-size: 1rem;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    margin-bottom: 18px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #014A7F;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #014A7F;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: .2s;
+}
+
+.btn-primary:hover {
+    background: #015896;
+}
+
+/* Back link */
+.back-link {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.back-link a {
+    text-decoration: none;
+    color: #014A7F;
+    font-weight: bold;
+}
+
+.back-link a:hover {
+    text-decoration: none;
+    color: #015896;
+}

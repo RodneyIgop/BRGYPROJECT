@@ -1,0 +1,274 @@
+<?php
+ require_once __DIR__ . '/Connection/conn.php';
+
+ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
+     $fullname = trim($_POST['fullname'] ?? '');
+     $email = trim($_POST['email'] ?? '');
+     $contactnumberRaw = trim($_POST['contactnumber'] ?? '');
+     $message = trim($_POST['message'] ?? '');
+
+     $digitsOnly = preg_replace('/\D+/', '', $contactnumberRaw);
+     if ($fullname === '' || $message === '' || $digitsOnly === '' || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+         header('Location: landingpage.php?msg=error#getintouch');
+         exit;
+     }
+
+     $contactnumber = (int)$digitsOnly;
+
+     $dateColumnName = null;
+     $dateColumnType = null;
+     $columnsResult = $conn->query('SHOW COLUMNS FROM messages');
+     if ($columnsResult instanceof mysqli_result) {
+         while ($col = $columnsResult->fetch_assoc()) {
+             $field = (string)($col['Field'] ?? '');
+             $type = strtolower((string)($col['Type'] ?? ''));
+             if ($field === '') {
+                 continue;
+             }
+             $looksLikeDateType = (strpos($type, 'date') !== false) || (strpos($type, 'timestamp') !== false);
+             $lname = strtolower($field);
+             $looksLikeDateName = in_array($lname, ['date', 'datesent', 'date_sent', 'sentdate', 'sent_date', 'createdat', 'created_at', 'createdon', 'created_on', 'timestamp'], true)
+                 || (strpos($lname, 'date') !== false)
+                 || (strpos($lname, 'time') !== false);
+             if ($looksLikeDateType && $looksLikeDateName) {
+                 $dateColumnName = $field;
+                 $dateColumnType = $type;
+                 break;
+             }
+         }
+         $columnsResult->free();
+     }
+
+     $stmt = null;
+     if ($dateColumnName && preg_match('/^[A-Za-z0-9_]+$/', $dateColumnName)) {
+         $sql = 'INSERT INTO messages (Fullname, email, contactnumber, message, `' . $dateColumnName . '`) VALUES (?, ?, ?, ?, ?)';
+         $nowValue = (strpos((string)$dateColumnType, 'date') !== false && strpos((string)$dateColumnType, 'time') === false)
+             ? date('Y-m-d')
+             : date('Y-m-d H:i:s');
+         $stmt = $conn->prepare($sql);
+         if ($stmt) {
+             $stmt->bind_param('ssiss', $fullname, $email, $contactnumber, $message, $nowValue);
+         }
+     } else {
+         $stmt = $conn->prepare('INSERT INTO messages (Fullname, email, contactnumber, message) VALUES (?, ?, ?, ?)');
+         if ($stmt) {
+             $stmt->bind_param('ssis', $fullname, $email, $contactnumber, $message);
+         }
+     }
+
+     if (!$stmt) {
+         header('Location: landingpage.php?msg=error#getintouch');
+         exit;
+     }
+
+     if ($stmt->execute()) {
+         $stmt->close();
+         header('Location: landingpage.php?msg=sent#getintouch');
+         exit;
+     }
+
+     $stmt->close();
+     header('Location: landingpage.php?msg=error#getintouch');
+     exit;
+ }
+ ?>
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="landingpage.css">
+    <script src="main.js"></script>
+    <title>Document</title>
+</head>
+<body>
+            <nav class="navbar"> 
+                <img src="images/brgylogo.png" alt="Logo">               
+                <h1 class="title " style="color:white;">BARANGAY NEW ERA <span>Document Request System</span></h1>
+                <button class="burger" aria-label="Toggle menu" aria-expanded="false">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+                <div class="nav-links">
+                  <a href="#Home">Home</a> 
+                  <a href="#announcements">Announcements</a> 
+                  <a href="#services">Services</a> 
+                  <a href="#About">About</a>                
+                  <a href="Residents/residentlogin.php" class="push-right">LOGIN</a>
+                  <a href="Residents/residentregister.php">REGISTER</a> 
+                </div>
+            </nav>  
+    <section id="Home">
+             <div class="container">
+    <div class="container">
+    <div class="Greetings">
+      <h1 class="Welcome">
+       <span> Welcome to</span> <span>BARANGAY NEW ERA</span> 
+        <span>Document Request System</span>
+      </h1> 
+      <div class="actions">
+        <button class="option"  onclick="window.location.href='Residents/residentlogin.php'">
+        <img src="images/docu.png" alt="Icon" class="btn-icon">
+        <span style="color:#fff;">Request Documents</span> 
+        </button>
+        <button class="option"onclick="window.location.href='Residents/residentregister.php'">
+        <img src="images/tao.png" alt="Icon" class="btn-icon">
+          <span>Register Now</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="logo" >
+      <a href="superadmin/superadminlogin.php"><img src="images/brgylogo.png" alt="Logo"></a>
+    </div>
+  </div>
+</section>
+<!-- ---------------------------------------------------------------------------------------- -->
+<section id="About">
+
+  
+  <div class="head">
+    <h1>ABOUT <span>About Our Barangay</span></h1>
+  </div>
+
+ 
+  <div class="about-container">
+
+    <div class="bottom-row">
+      
+     
+      <div class="extra">
+         <img src="images/barangay hall_background.jpg" alt="Barangay Hall">
+        
+      </div>
+      
+      
+      <div class="about">
+       <h2>
+          <span>Barangay Konoha </span> 
+          <span>is a vibrant and thriving</span> 
+          <span>community dedicated to fostering unity, safety, and progress among its residents.</span>  
+          <span>Our barangay is committed to providing excellent public service and promoting a</span> 
+          <span>harmonious environment for all.</span>
+        </h2>
+      </div>
+
+    </div> 
+        <button class="viewmore">
+          <span>View More</span>
+        </button>
+  </div> 
+
+</section> 
+
+ <!-- ------------------------------------------------------------------------------- -->
+      
+<section id="services">
+  <div class="head">
+    <h1>SERVICES <span>Barangay Services</span></h1>
+  </div>
+  
+  <div class="documents">
+
+
+      <div class="box">
+
+         <img src="images/clearance.png" alt="Icon" class="btn-icon">
+            <span>Barangay Clearance</span>
+           
+      </div>
+
+      <div class="box">
+         <img src="images/indigency.png" alt="Icon" class="btn-icon">
+          <span>Certificate of Indigency</span>
+
+
+      </div>
+      <div class="box">
+         <img src="images/residency.png" alt="Icon" class="btn-icon">
+          <span>Certificate of Residency</span>
+    
+      </div>
+
+
+      <div class="box">
+         <img src="images/permit.png" alt="Icon" class="btn-icon">
+          <span>Barangay Permit</span>
+
+
+      </div>
+
+      <button class="options" onclick="window.location.href='residentlogin.php'">
+         <span>Request now </span> 
+        <img src="images/arrow.png" alt="Icon" class="btn-icon">
+       
+        </button>
+      
+      </div>
+</section>
+        
+<!-- ---------------------------------------------------------------------------------------- -->
+<section id="getintouch">
+
+      <div class="head">
+          <h1>CONTACT <span>Get In Touch</span></h1>
+       </div>
+
+     <div class="top-boxes">
+        <input type="text" class="textbox small" placeholder="Name">
+        <input type="text" class="textbox small" placeholder="Email">
+        <input type="text" class="textbox small" placeholder="Contact No.">
+    </div>
+
+    <textarea class="textbox large" placeholder="Message..."></textarea>
+
+    <button class="options">
+         <span>Send Message</span>
+    </button>
+
+     
+  </section>
+
+  <footer class="hehe"> 
+    <div class="foot1">
+      <a href="Admin/adminLogin.php"><img src="images/brgylogo.png" alt="Logo"></a>
+    </div>
+
+    <div class="foot">
+      <h2>CONTACT US</h2>
+      <div class="foot-row">
+        <img src="images/telephone.png" alt="Telephone icon">
+        <a href="tel:0997645314">0997645314</a>
+        <span style="color:#fff;">/</span>
+        <a href="tel:+63212345678">(02) 1234 - 5678</a>
+      </div>
+      <div class="foot-row">
+        <img src="images/telephone.png" alt="Hotline icon">
+        <a href="tel:911">Hotline - 911 / 8888</a>
+      </div>
+      <div class="foot-row">
+        <img src="images/email.png" alt="Email icon">
+        <a href="mailto:barangay.newera@email.com">barangay.newera@email.com</a>
+      </div>
+      <div class="foot-row">
+        <img src="images/location.png" alt="Location icon">
+        <a href="#">New Era Dasmariñas City, Cavite</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <a>For urgent concerns, please contact the barangay office <br>directly or visit during office hours (Mon - Fri 8am to 5pm).</a>
+    </div>
+    
+
+  </footer>
+    <div class="linya">
+
+    </div>
+  <div class="copyright">
+    <a>©Copyright 2025 Barangay New era </a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+ @font-face {
+ font-family: 'playfair';
+ src: url(fonts/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf);
+   }
+
+.custom-bg {
+  background-color: #014A7F;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.custom-text-color1 {
+   color: #FFFFFF; 
+   white-space: nowrap;
+   
+}
+.special-font{
+  color: #FFFFFF; 
+   white-space: nowrap;
+   font-family:'playfair';
+}
+.custom-text-color2 {
+   color: #014A7F; 
+}
+
+.custom-button-color {
+  color: #FFFFFF;
+  background-color: #014A7F;
+  border-color: #014A7F;
+  text-decoration: none;
+  color: #ffffff !important;
+}
+
+/* .custom-button-color {
+  background-color: #014A7F;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  transition: 0.3s ease;
+  white-space: nowrap;
+} */
+
+.custom-button-color:hover {
+  color: #FFFFFF;
+  background-color: #014A7F;
+  border-color: #014A7F;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+
+
+.service-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 10px;
+}
+
+.service-card img {
+  width: 65px;
+  transition: transform 0.3s ease;
+}
+
+.service-card h6 {
+  transition: color 0.3s ease;
+  font-weight: 600;
+}
+
+/* Hover Effect */
+.service-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.service-card:hover img {
+  transform: scale(1.1);
+}
+
+.service-card:hover h6 {
+  color: #014A7F; /* modern blue tone */
+}

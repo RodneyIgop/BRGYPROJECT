@@ -1,0 +1,334 @@
+/* Admin Login page styling (adapted from residentlogin.css) */
+
+body{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    overflow-x:hidden;
+}
+
+*, *::before, *::after{box-sizing:border-box;}
+img, svg, video, canvas{max-width:100%;height:auto;display:block;}
+
+/* Reset and container widths */
+:where(.container, .documents, .bottom-row, .top-boxes, .hehe){min-width:0;}
+:where(.container, .about-container, .bottom-row, .documents, .top-boxes, .announcements-box .section, .hehe, .copyright){max-width:100%;}
+
+/* ==================== NAVBAR ==================== */
+.navbar{
+    display:flex;
+    align-items:center;
+    padding:10px 20px;
+    background:#014A7F;
+    position:sticky;
+    top:0;
+    overflow:hidden;
+    margin-bottom:0;
+}
+.navbar img{height:100px;margin-right:10px;}
+.navbar a, .navbar h1{color:#fff;text-decoration:none;margin-right:20px;}
+.navbar a{font-size:20px;}
+.title{color:#fff;font-weight:800;line-height:1.1;letter-spacing:0.5px;text-shadow:0 2px 4px rgba(0,0,0,.35);flex:1;}
+.title span{margin-left:40px;display:block;font-style:italic;font-size:20px;}
+
+/* Burger menu */
+.burger{display:none;background:transparent;border:0;padding:8px;margin-left:auto;cursor:pointer;}
+.burger span{display:block;width:26px;height:3px;background:#fff;margin:5px 0;border-radius:2px;}
+
+/* Nav links */
+.nav-links{display:flex;align-items:center;margin-left:auto;gap:12px;}
+.push-rright{margin-left:auto;}
+
+/* Header background image */
+#Home::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;width:100%;height:100vh;
+    background-image:url("../images/barangay hall_background.jpg");
+    background-size:cover;background-position:center;background-repeat:no-repeat;
+    filter:blur(3px);
+    z-index:-1;
+}
+#Home{position:relative;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ==================== LOGIN CARD ==================== */
+.login{
+    align-items:center;
+    text-align:center;
+    display:flex;
+    justify-content:center;
+    background:#fff;
+    width:90%;
+    max-width:420px;
+    margin:10px auto;
+    border-radius:20px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    flex-direction:column;
+    gap:12px;
+}
+.login h1{
+    color:#000;
+    font-family:Arial,Helvetica,sans-serif;
+    margin:0 0 10px 0;
+    text-align:center;
+    font-size:30px;
+}
+.login .logo{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:-10px;
+}
+.login .logo img{
+    width:80px;
+    height:70px;
+}
+
+.content{
+    text-align:left;
+}
+.content span{
+    display:block;
+}
+
+.label{
+    font-size:20px;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+/* Input styling */
+.email, .employeeID{
+    background-image:url('../images/email.png');
+    background-repeat:no-repeat;
+    background-size:18px;
+    background-position:10px center;
+    padding-left:38px;
+    height:30px;
+    width:300px;
+    border-radius:10px;
+    background-color:#E8E8E8;
+    margin:10px 0;
+}
+.password{
+    background-image:url('../images/lock.png');
+    background-repeat:no-repeat;
+    background-size:18px;
+    background-position:10px center;
+    padding-left:38px;
+    height:30px;
+    width:300px;
+    border-radius:10px;
+    background-color:#E8E8E8;
+    margin:10px 0;
+}
+
+.checkrow{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+}
+
+.checkrow a{
+    /* margin-left:60px; */
+    text-decoration:none;
+    color:#014A7F;
+}
+
+.checkrow label{
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.Login{
+    margin:20px 0;
+    background:#014A7F;
+    color:#fff;
+    width:300px;
+    height:40px;
+    border-radius:25px;
+}
+.donthave{
+    display:inline;
+    margin-right:4px;
+}
+
+.register-line{
+    margin-top:8px;
+    text-align:center;
+}
+
+.register,.links{
+    text-decoration:none;
+    color:#014A7F;
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS ==================== */
+@media (max-width:1400px){
+    .navbar img{
+        height:90px;
+    }
+    .title span{
+        font-size:18px;
+    }
+    .login{
+        max-width:420px;
+        padding:24px;
+    }
+    .login .logo img{
+        width:110px;
+        height:110px;
+    }
+}
+@media (max-width:1200px){
+    .navbar img{
+        height:80px;
+    }
+    .title span{
+        font-size:18px;
+    }
+    .nav-links{
+        gap:10px;
+    }
+    .login{
+        max-width:400px;
+        padding:22px;
+    }
+    .login h1{
+        font-size:28px;
+    }
+    .login .logo img{
+        width:100px;
+        height:100px;
+    }
+    .email,.password,.employeeID{
+        width:280px;
+        height:32px;
+    }
+    .Login{
+        width:280px;
+        height:40px;
+    }
+}
+@media (max-width:768px){
+    .navbar{
+        overflow:visible;
+        position:relative;
+        justify-content:space-between;
+    }
+    .navbar img{
+        height:70px;
+    }
+    .nav-links{
+        gap:8px;
+    }
+    .title span{
+        font-size:16px;
+        margin-left:20px;
+    }
+    #Home{
+        min-height:100vh;
+    }
+    .login{
+        width:92%;
+        max-width:380px;
+        padding:20px;
+        gap:10px;
+    }
+    .login h1{
+        font-size:24px;
+        margin-left:0;
+        text-align:center;
+    }
+    .login .logo img{
+        width:96px;
+        height:96px;
+    }
+    .content{
+        text-align:center;
+    }
+    .email,.password,.employeeID{
+        width:100%;
+        max-width:320px;
+        height:34px;
+    }
+    .Login{
+        width:100%;
+        max-width:320px;
+        height:42px;
+    }
+    .checkrow{
+        flex-direction:row;
+        padding:0 6px;
+    }
+    .checkrow a{
+        margin-left:0;
+    }
+    .burger{
+        display:block;
+        position:relative;
+        z-index:11;
+    }
+    .nav-links{
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        right:0;
+        background:#014A7F;
+        flex-direction:column;
+        gap:12px;
+        padding:12px 16px;
+        border-bottom-left-radius:8px;
+        border-bottom-right-radius:8px;
+        z-index:10;
+        margin-left:0;
+    }
+    .nav-links a{
+        display:block;
+        width:100%;
+        text-align:center;
+        padding:10px 16px;
+    }
+    .navbar.open .nav-links{
+        display:flex;
+    }
+}
+@media (max-width:640px){
+    .navbar img{
+        height:60px;
+    }
+    .title span{
+        font-size:16px;
+        margin-left:12px;
+    }
+    .login{
+        width:94%;
+        max-width:340px;
+        padding:16px;
+    }
+    .login .logo img{
+        width:80px;
+        height:80px;
+    }
+    .email,.password,.employeeID{
+        max-width:280px;
+        height:34px;
+    }
+    .Login{
+        max-width:280px;
+        height:42px;
+    }
+}
+/* Header background image */
+#Home::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;width:100%;height:100vh;
+    background-image:url("../images/barangay hall_background.jpg");
+    background-size:cover;background-position:center;background-repeat:no-repeat;
+    filter:blur(3px);
+    z-index:-1;
+}
+#Home{position:relative;min-height:100vh;display:flex;flex-direction:column;}
