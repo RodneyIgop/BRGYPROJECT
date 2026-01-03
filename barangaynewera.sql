@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2025 at 06:08 AM
+-- Generation Time: Jan 03, 2026 at 09:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,7 +63,9 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `user_name`, `user_role`, `action`
 (16, 4, 'TEST69 Balbuena', 'Admin', 'Login', 'Admin logged in successfully', 'adminLogin.php', '::1', 'Successful', '2025-12-29 16:00:34'),
 (17, 1, 'ADMIN ACCOUNT', 'Admin', 'Login', 'Admin logged in successfully', 'adminLogin.php', '::1', 'Successful', '2025-12-30 13:29:22'),
 (18, 1, 'ADMIN ACCOUNT', 'Admin', 'Login', 'Admin logged in successfully', 'adminLogin.php', '::1', 'Successful', '2025-12-31 04:32:22'),
-(19, 1, 'ADMIN ACCOUNT', 'Admin', 'Reject Request', 'Rejected document request for Rodney Odiamar - Document: Certificate of Residency - Reason: Duplicate request', 'adminpending.php', '::1', 'Successful', '2025-12-31 05:06:59');
+(19, 1, 'ADMIN ACCOUNT', 'Admin', 'Reject Request', 'Rejected document request for Rodney Odiamar - Document: Certificate of Residency - Reason: Duplicate request', 'adminpending.php', '::1', 'Successful', '2025-12-31 05:06:59'),
+(20, 1, 'ADMIN ACCOUNT', 'Admin', 'Login', 'Admin logged in successfully', 'adminLogin.php', '::1', 'Successful', '2026-01-03 05:22:45'),
+(21, 1, 'ADMIN ACCOUNT', 'Admin', 'Login', 'Admin logged in successfully', 'adminLogin.php', '::1', 'Successful', '2026-01-03 07:22:34');
 
 -- --------------------------------------------------------
 
@@ -86,13 +88,6 @@ CREATE TABLE `adminrequests` (
   `status` enum('pending','read','approved','rejected') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `adminrequests`
---
-
-INSERT INTO `adminrequests` (`RequestID`, `lastname`, `firstname`, `middlename`, `suffix`, `birthdate`, `age`, `email`, `contactnumber`, `password`, `requestDate`, `status`) VALUES
-(21, 'TAE', 'BURAT', 'Test', 'test', '2007-12-06', 18, 'rrodneyodiamar@gmail.com', 2147483647, 0, '2025-12-30 14:40:51', 'pending');
-
 -- --------------------------------------------------------
 
 --
@@ -114,13 +109,6 @@ CREATE TABLE `admintbl` (
   `password` varchar(255) NOT NULL,
   `verificationcode` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `admintbl`
---
-
-INSERT INTO `admintbl` (`AdminID`, `employeeID`, `lastname`, `firstname`, `middlename`, `suffix`, `birthdate`, `age`, `contactnumber`, `email`, `profile_picture`, `password`, `verificationcode`) VALUES
-(1, 'ADM-4416', 'ACCOUNT', 'ADMIN', 'Pusod', '', '2008-01-12', 17, 2147483647, 'geraldlouissumaylo@gmail.com', 'uploads/adminprofiles/admin_1_1766735785.jpg', 'T@9Fq#L4x', 0);
 
 -- --------------------------------------------------------
 
@@ -364,6 +352,70 @@ INSERT INTO `pending_requests` (`id`, `user_id`, `fullname`, `document_type`, `p
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rejected_admin_requests`
+--
+
+CREATE TABLE `rejected_admin_requests` (
+  `id` int(11) NOT NULL,
+  `RequestID` varchar(50) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `middlename` varchar(100) DEFAULT NULL,
+  `suffix` varchar(20) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `contactnumber` varchar(20) DEFAULT NULL,
+  `requestDate` datetime NOT NULL,
+  `rejectionDate` datetime DEFAULT current_timestamp(),
+  `rejectionReason` text DEFAULT NULL,
+  `rejected_by` varchar(50) DEFAULT NULL,
+  `status` enum('rejected','archived') DEFAULT 'rejected'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `rejected_admin_requests`
+--
+
+INSERT INTO `rejected_admin_requests` (`id`, `RequestID`, `lastname`, `firstname`, `middlename`, `suffix`, `birthdate`, `age`, `email`, `contactnumber`, `requestDate`, `rejectionDate`, `rejectionReason`, `rejected_by`, `status`) VALUES
+(1, '21', 'TAE', 'BURAT', 'Test', 'test', '0000-00-00', 18, 'rrodneyodiamar@gmail.com', '2147483647', '2025-12-30 14:40:51', '2026-01-03 15:16:19', NULL, 'Rodney Canillo', 'rejected'),
+(2, '22', 'Canillo', 'Rodney', 'sadsas', 'test', '0000-00-00', 20, 'rhodneyodiamar@gmail.com', '2147483647', '2026-01-03 15:54:42', '2026-01-03 16:00:02', NULL, 'Rodney Canillo', 'rejected');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rejected_resident_requests`
+--
+
+CREATE TABLE `rejected_resident_requests` (
+  `id` int(11) NOT NULL,
+  `RequestID` varchar(50) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `middlename` varchar(100) DEFAULT NULL,
+  `suffix` varchar(20) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `contactnumber` varchar(20) DEFAULT NULL,
+  `requestDate` datetime NOT NULL,
+  `rejectionDate` datetime DEFAULT current_timestamp(),
+  `rejectionReason` text DEFAULT NULL,
+  `rejected_by` varchar(50) DEFAULT NULL,
+  `status` enum('rejected','archived') DEFAULT 'rejected'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `rejected_resident_requests`
+--
+
+INSERT INTO `rejected_resident_requests` (`id`, `RequestID`, `lastname`, `firstname`, `middlename`, `suffix`, `birthdate`, `age`, `email`, `contactnumber`, `requestDate`, `rejectionDate`, `rejectionReason`, `rejected_by`, `status`) VALUES
+(1, '28', 'Canillo', 'burat', 'Test', 'test', '0000-00-00', 18, 'odiamarrodney@gmail.com', '2147483647', '2025-12-30 14:27:17', '2026-01-03 15:20:16', NULL, 'Rodney Canillo', 'rejected'),
+(2, '27', 'Canillo', 'Rodney', 'Test', 'test', '0000-00-00', 10, 'rhodneyodiamar@gmail.com', '2147483647', '2025-12-30 14:14:57', '2026-01-03 15:25:32', NULL, 'Rodney Canillo', 'rejected');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `released`
 --
 
@@ -433,8 +485,8 @@ CREATE TABLE `superadmin` (
 --
 
 INSERT INTO `superadmin` (`id`, `employeeID`, `LastName`, `FirstName`, `MiddleName`, `Suffix`, `Email`, `profile_picture`, `Password`, `verificationcode`, `birthdate`, `age`) VALUES
-(1, 'SPA37552', 'ACCOUNT1', 'MASTER', 'MWEHEHE', '', 'geraldlouis.sumaylo@cvsu.edu.ph', 'uploads/superadminprofiles/superadmin_1_1766813913.jpeg', 'R8$kM!2pQ', '995999', '2005-08-13', 20),
-(3, 'SPA30301', 'Canillo', 'Rodney', 'user', 'user', 'rrodneyodiamar@gmail.com', '', 'Odi!2Mar', '420653', '2018-12-13', 7);
+(3, 'SPA30301', 'Canillo', 'Rodney', 'user', 'user', 'rrodneyodiamar@gmail.com', '', 'Odi!2Mar', '420653', '2018-12-13', 7),
+(4, 'SPA82118', 'Canillo', 'Rodney', 'sadsas', 'test', 'rodney.odiamar@cvsu.edu.ph', '', 'Odi!2Mar', '113519', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -466,8 +518,7 @@ CREATE TABLE `userrequest` (
 --
 
 INSERT INTO `userrequest` (`RequestID`, `lastname`, `firstname`, `middlename`, `suffix`, `birthdate`, `address`, `age`, `censusnumber`, `email`, `contactnumber`, `password`, `verificationCode`, `dateRequested`, `profile_picture`, `status`) VALUES
-(27, 'Canillo', 'Rodney', 'Test', 'test', '0000-00-00', 'Dasma', 10, 987456, 'rhodneyodiamar@gmail.com', 2147483647, 'Odi!2Mar', 618354, '2025-12-30 14:14:57', NULL, 'pending'),
-(28, 'Canillo', 'burat', 'Test', 'test', '0000-00-00', 'QUEZON CITY BESIDE PASIG RIVER', 18, 987456, 'odiamarrodney@gmail.com', 2147483647, 'Odi!2Mar', 455637, '2025-12-30 14:27:17', NULL, 'pending');
+(29, 'Freecs', 'Gon', 'sadsas', 'test', '0000-00-00', 'Purok 4, Barangay New Era', 18, 123456, 'odiamarrodney@gmail.com', 2147483647, 'Odi!2Mar', 125363, '2026-01-03 16:25:22', NULL, 'pending');
 
 -- --------------------------------------------------------
 
@@ -609,6 +660,24 @@ ALTER TABLE `pending_requests`
   ADD KEY `idx_date_requested` (`date_requested`);
 
 --
+-- Indexes for table `rejected_admin_requests`
+--
+ALTER TABLE `rejected_admin_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_request_id` (`RequestID`),
+  ADD KEY `idx_email` (`email`),
+  ADD KEY `idx_rejection_date` (`rejectionDate`);
+
+--
+-- Indexes for table `rejected_resident_requests`
+--
+ALTER TABLE `rejected_resident_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_request_id` (`RequestID`),
+  ADD KEY `idx_email` (`email`),
+  ADD KEY `idx_rejection_date` (`rejectionDate`);
+
+--
 -- Indexes for table `residents`
 --
 ALTER TABLE `residents`
@@ -640,19 +709,19 @@ ALTER TABLE `usertbl`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `adminrequests`
 --
 ALTER TABLE `adminrequests`
-  MODIFY `RequestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `RequestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `admintbl`
 --
 ALTER TABLE `admintbl`
-  MODIFY `AdminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `AdminID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -715,6 +784,18 @@ ALTER TABLE `pending_requests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `rejected_admin_requests`
+--
+ALTER TABLE `rejected_admin_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `rejected_resident_requests`
+--
+ALTER TABLE `rejected_resident_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `residents`
 --
 ALTER TABLE `residents`
@@ -724,13 +805,13 @@ ALTER TABLE `residents`
 -- AUTO_INCREMENT for table `superadmin`
 --
 ALTER TABLE `superadmin`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `userrequest`
 --
 ALTER TABLE `userrequest`
-  MODIFY `RequestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `RequestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `usertbl`

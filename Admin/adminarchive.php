@@ -37,7 +37,10 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
             <a href="adminAnnouncements.php"> <img src="../images/marketing.png" alt=""> Announcements</a>
             <a href="adminMessages.php"> <img src="../images/email.png" alt="">Messages</a>
             <a href="adminResidents.php"> <img src="../images/residents.png" alt="">Residents</a>
-            <button onclick="logout()" style="margin-top:auto;"> <img src="../images/logout.png" alt="">Logout</button>
+            <!-- <button onclick="logout()" style="margin-top:auto;"> <img src="../images/logout.png" alt="">Logout</button> -->
+             <button onclick="window.location.href='adminRegister.php'" style="margin-top:auto;">
+                <img src="../images/logout.png" alt=""> Logout
+            </button>
         </nav>
     </div>
 

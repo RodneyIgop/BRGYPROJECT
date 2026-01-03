@@ -61,7 +61,11 @@ $conn->close();
             <a href="adminAnnouncements.php"> <img src="../images/marketing.png" alt=""> Announcements</a>
             <a href="adminMessages.php"> <img src="../images/email.png" alt="">Messages</a>
             <a href="adminResidents.php" class="active"> <img src="../images/residents.png" alt="">Residents</a>
-            <button onclick="logout()" style="margin-top:auto;"> <img src="../images/logout.png" alt="">Logout</button>
+            <!-- <a href="adminRegister.php" class="active"> <img src="../images/residents.png" alt="">Logout</a> -->
+            <!-- <button onclick="logout()" style="margin-top:auto;"> <img src="../images/logout.png" alt="">Logout</button> -->
+             <button onclick="window.location.href='adminRegister.php'" style="margin-top:auto;">
+                <img src="../images/logout.png" alt=""> Logout
+            </button>
         </nav>
     </div>
 
