@@ -78,11 +78,11 @@
 
     .login {
       background-color: #fff;
-      padding: 40px 30px;
+      padding: 25px 20px;
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       width: 100%;
-      max-width: 420px;
+      max-width: 380px;
       text-align: center;
     }
 
@@ -129,7 +129,6 @@
       align-items: center;
       margin-bottom: 12px;
       font-size: 0.85rem;
-      margin-top: -15px;
     }
 
     .login .checkrow input[type="checkbox"] {
@@ -300,15 +299,13 @@
           <p class="error-msg">Please fill in all fields.</p>
         <?php elseif (isset($_GET['error']) && $_GET['error'] == 'blocked'): ?>
           <p class="error-msg">Your account has been blocked. Please contact the barangay administrator for assistance.</p>
-        <?php elseif (isset($_GET['success']) && $_GET['success'] == 'password_reset'): ?>
-          <p class="success-msg" style="color: green;">Password reset successfully! Please login with your new password.</p>
         <?php endif; ?>
 
         <div class="checkrow">
           <div>
-            <a href="forgotPassword.php" class="forgot-password">Forgot Password?</a>
-            
+            <input type="checkbox" name="remember" value="remember"> Remember me
           </div>
+          <a href="#" class="forgot-password">Forgot Password?</a>
         </div>
 
         <button type="submit" class="Login">LOGIN</button>
@@ -319,7 +316,7 @@
       
       <p class="donthave" style="margin-top: 20px;">Login as Administrator?</p>
       <a href="../Admin/adminlogin.php" class="register">Admin Login</a>
-      <!-- <a href="../SuperAdmin/superadminlogin.php" class="register">Super Admin Login</a> -->
+      <a href="../SuperAdmin/superadminlogin.php" class="register">Super Admin Login</a>
       
       <a href="../index.php" class="back-home">← Back to Home</a>
     </div>
@@ -329,7 +326,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <script src="./residentlogin.js"></script>
-<!-- <script>
+<script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.toggle-password').forEach(toggle => {
         toggle.addEventListener('click', () => {
@@ -351,5 +348,5 @@
         });
     });
 });
-</script> -->
+</script>
 </html>

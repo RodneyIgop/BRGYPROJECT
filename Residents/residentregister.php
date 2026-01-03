@@ -28,7 +28,6 @@ if (isset($_GET['success'])) {
             background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
             background-image: url('../images/barangay hall_background.jpg');
             background-size: cover;
             background-position: center;
@@ -81,30 +80,30 @@ if (isset($_GET['success'])) {
         .register-section {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding: 80px 20px 40px;
+            box-sizing: border-box;
             min-height: 100vh;
-            padding-top: 70px;
         }
 
         .register-box {
             background-color: #fff;
-            padding: 40px 30px;
+            padding: 18px 25px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 600px;
+            width: 60%;
+            max-width: 800px;
             text-align: center;
-            margin: 3rem 0 5rem 0;
         }
 
         .register-box .logo img {
-            width: 100px;
-            margin-bottom: 20px;
+            width: 70px;
+            margin-bottom: 12px;
         }
 
         .register-box h1 {
-            font-size: 1.8rem;
-            margin-bottom: 25px;
+            font-size: 1.5rem;
+            margin-bottom: 18px;
             color: #014A7F;
             font-weight: 700;
         }
@@ -120,18 +119,18 @@ if (isset($_GET['success'])) {
         .register-box input,
         .register-box select {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
             border-radius: 8px;
             border: 1px solid #ced4da;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .register-box .checkrow {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
         }
 
         .register-box .checkrow input[type="checkbox"] {
@@ -149,8 +148,8 @@ if (isset($_GET['success'])) {
 
         .register-box button.register {
             width: 100%;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 10px;
+            font-size: 0.9rem;
             font-weight: bold;
             background-color: #014A7F;
             color: #fff;
@@ -164,8 +163,8 @@ if (isset($_GET['success'])) {
         }
 
         .register-box .already-account {
-            margin-top: 15px;
-            font-size: 0.95rem;
+            margin-top: 10px;
+            font-size: 0.85rem;
             color: #555;
         }
 
@@ -181,9 +180,10 @@ if (isset($_GET['success'])) {
 
         .register-box .back-home {
             display: block;
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 10px;
+            font-weight: 600;
+            color: #014A7F;
+            margin-top: 15px;
+            text-align: center;
         }
 
         .register-box .back-home:hover {
@@ -193,28 +193,38 @@ if (isset($_GET['success'])) {
         /* Error message */
         .register-box p.error-msg {
             color: red;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
 
         /* ================== Responsive ================== */
         @media (max-width: 576px) {
             .register-box {
-                padding: 30px 20px;
+                width: 95%;
+                padding: 15px 12px;
+                margin: 0;
             }
 
             .register-box h1 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+                margin-bottom: 15px;
             }
 
             .register-box input {
-                font-size: 0.95rem;
-                padding: 10px;
+                font-size: 0.85rem;
+                padding: 8px;
+                margin-bottom: 8px;
             }
 
             .register-box button.register {
-                font-size: 0.95rem;
-                padding: 10px;
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .register-box {
+                width: 80%;
             }
         }
 
@@ -291,14 +301,6 @@ if (isset($_GET['success'])) {
             color: #fff;
         }
 
-        @media (max-width: 576px) {
-            .register-box {
-                padding: 30px 20px;
-                margin: 30px 20px;
-            }
-
-        }
-
         /* Remove browser password reveal icon (Chrome / Edge) */
         input[type="password"]::-ms-reveal,
         input[type="password"]::-ms-clear {
@@ -310,10 +312,10 @@ if (isset($_GET['success'])) {
             position: absolute;
             right: 0;
         }
-
         .required {
-            color: red;
-        }
+        color: red;
+}
+
     </style>
 
 </head>
@@ -368,8 +370,8 @@ if (isset($_GET['success'])) {
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label>Middle Name <span class="required">*</span></label>
-                        <input type="text" name="MiddleName" placeholder="Middle Name">
+                        <label>Middle Name</label>
+                        <input type="text" name="MiddleName" placeholder="Middle Name" >
                     </div>
                     <div class="form-group col-md-6">
                         <label>Suffix</label>
@@ -422,6 +424,7 @@ if (isset($_GET['success'])) {
                         <i class="fa-solid fa-eye"></i>
                     </span>
                 </div>
+
                 <div class="form-group" style="position: relative;">
                     <label>Confirm Password <span class="required">*</span></label>
                     <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required
@@ -432,7 +435,6 @@ if (isset($_GET['success'])) {
                         <i class="fa-solid fa-eye"></i>
                     </span>
                 </div>
-
 
                 <div class="checkrow" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
                     <input type="checkbox" name="accept_terms" id="accept_terms" style="width: 18px; height: 18px;">
@@ -449,7 +451,7 @@ if (isset($_GET['success'])) {
 
             <p class="already-account">Already have an account?</p>
             <a href="residentlogin.php" class="loginhere">Login here</a>
-            <a href="../index.php" class="back-home">Back to Home</a>
+            <a href="../index.php" class="back-home">← Back to Home</a>
         </div>
     </section>
 
@@ -503,7 +505,22 @@ if (isset($_GET['success'])) {
             icon.classList.add('fa-eye');
         }
     });
-</script>
 
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmIcon = toggleConfirmPassword.querySelector('i');
+
+    toggleConfirmPassword.addEventListener('click', () => {
+        if (confirmPasswordInput.type === 'password') {
+            confirmPasswordInput.type = 'text';
+            confirmIcon.classList.remove('fa-eye');
+            confirmIcon.classList.add('fa-eye-slash');
+        } else {
+            confirmPasswordInput.type = 'password';
+            confirmIcon.classList.remove('fa-eye-slash');
+            confirmIcon.classList.add('fa-eye');
+        }
+    });
+</script>
 
 </html>

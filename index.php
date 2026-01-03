@@ -304,7 +304,6 @@ footer a:hover {
     <a class="navbar-brand d-flex align-items-center" href="#">
       <img src="images/brgylogo.png" class="mr-2">
       <strong>Barangay New Era</strong>
-      
     </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
@@ -416,7 +415,7 @@ footer a:hover {
       </div>
       <div class="col-md-6">
         <p>
-            <strong>Barangay New Era</strong> is a vibrant and thriving community dedicated to 
+            <strong>Barangay Konoha</strong> is a vibrant and thriving community dedicated to 
             fostering unity, safety, and progress among its residents. Our barangay is committed 
             to providing excellent public service and promoting a harmonious environment for all.
         </p>

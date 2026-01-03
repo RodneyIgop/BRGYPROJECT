@@ -9,16 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = sanitize($_POST['description']);
     $date = sanitize($_POST['date']);
 
-    // Validate date format and prevent future dates
-    if (!strtotime($date)) {
-        die("Invalid date format provided.");
-    }
-    
-    if (strtotime($date) > strtotime(date('Y-m-d'))) {
-        die("Announcement date cannot be in the future.");
-    }
-
-    // Fetch existing announcement
+    // Fetch existing image
     $stmt = $conn->prepare("SELECT image FROM announcements WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -41,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image = $existing['image'];
     }
 
-    // Update announcement with validated date
+    // Update announcement
     $update = $conn->prepare("UPDATE announcements SET title = ?, description = ?, image = ?, date = ? WHERE id = ?");
     $update->bind_param("ssssi", $title, $description, $image, $date, $id);
     $update->execute();

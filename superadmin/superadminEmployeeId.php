@@ -89,18 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Enter Employee ID - Superadmin Register</title>
 
     <!-- Use unified theme design -->
-    <link rel="stylesheet" href="./superadminEmployeeId.css">
+    <link rel="stylesheet" href="superadminEmployeeId.css">
 </head>
-<style>
-    input {
-    width: 94%;
-    padding: 11px 12px;
-    font-size: 1rem;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    margin-bottom: 18px;
-}
-</style>
+
 <body>
 
     <nav class="navbar">

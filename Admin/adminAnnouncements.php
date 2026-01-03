@@ -45,313 +45,123 @@ if (isset($_GET['delete'])) {
         
         /* Enhanced Announcement Card Styles */
         .announcement-card {
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
-            border: 1px solid #e1e5e9;
-            background: #fff;
-            position: relative;
-        }
-        
-        .announcement-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #014A7F, #0288d1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
         
         .announcement-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
-            border-color: #014A7F;
-        }
-        
-        .announcement-card:hover::before {
-            opacity: 1;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
         }
         
         .announcement-image-container {
-            height: 220px;
+            height: 200px;
             overflow: hidden;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             position: relative;
-        }
-        
-        .announcement-image-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .announcement-card:hover .announcement-image-container::after {
-            opacity: 1;
         }
         
         .announcement-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.5s ease;
         }
         
         .announcement-card:hover .announcement-image {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
         
         .announcement-date {
             color: #6c757d;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 12px;
         }
         
         .announcement-title {
-            color: #1a1a1a;
-            font-weight: 700;
-            line-height: 1.3;
-            min-height: 56px;
+            color: #2c3e50;
+            font-weight: 600;
+            line-height: 1.4;
+            min-height: 48px;
             display: flex;
             align-items: center;
-            font-size: 1.1rem;
         }
         
         .announcement-description {
             color: #5a6c7d;
             font-size: 0.95rem;
-            line-height: 1.7;
-            min-height: 72px;
-            font-weight: 400;
+            line-height: 1.6;
+            min-height: 60px;
         }
         
         .announcement-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            padding-top: 16px;
-            border-top: 1px solid #e9ecef;
-            margin-top: auto;
         }
         
         .btn-edit-announcement {
-            background: linear-gradient(135deg, #ffc107, #ffb300);
+            background-color: #ffc107;
             border: none;
             color: #212529;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
-            flex: 1;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
         
         .btn-edit-announcement:hover {
-            background: linear-gradient(135deg, #ffb300, #ff9800);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+            background-color: #e0a800;
+            transform: translateY(-1px);
         }
         
         .btn-delete-announcement {
-            background: linear-gradient(135deg, #dc3545, #c82333);
+            background-color: #dc3545;
             border: none;
             color: white;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
-            flex: 1;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
         
         .btn-delete-announcement:hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            background-color: #c82333;
+            transform: translateY(-1px);
         }
         
         /* Header improvements */
         .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 {
             background: linear-gradient(135deg, #014A7F 0%, #0288d1 100%);
-            padding: 2.5rem;
-            border-radius: 20px;
+            padding: 2rem;
+            border-radius: 16px;
             color: white;
-            margin-bottom: 2.5rem !important;
-            box-shadow: 0 8px 32px rgba(1, 74, 127, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-            text-decoration: none;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            margin-bottom: 2rem !important;
         }
         
         .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 h3 {
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            font-size: 1.8rem;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
         
         .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 .btn {
             background-color: rgba(255,255,255,0.2);
             border: 2px solid rgba(255,255,255,0.3);
             backdrop-filter: blur(10px);
-            padding: 12px 28px;
-            font-weight: 600;
+            padding: 10px 24px;
+            font-weight: 500;
             transition: all 0.3s ease;
-            border-radius: 12px;
-            font-size: 1rem;
-            position: relative;
-            z-index: 1;
         }
         
         .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 .btn:hover {
             background-color: rgba(255,255,255,0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        
-        /* Empty state styling */
-        .text-center:not(.d-flex) p {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 3rem;
-            border-radius: 16px;
-            color: #6c757d;
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin: 2rem 0;
-            border: 2px dashed #dee2e6;
-        }
-        
-        /* Responsive improvements */
-        @media (max-width: 768px) {
-            .announcement-card {
-                margin-bottom: 1.5rem;
-            }
-            
-            .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
-            }
-            
-            .d-flex.flex-column.align-items-center.text-center.mt-3.mb-4 h3 {
-                font-size: 1.5rem;
-            }
-            
-            .announcement-actions {
-                flex-direction: column;
-            }
-            
-            .btn-edit-announcement,
-            .btn-delete-announcement {
-                width: 100%;
-            }
-        }
-        
-        /* Modal enhancements */
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, #014A7F, #0288d1);
-            border: none;
-            padding: 1.5rem;
-        }
-        
-        .modal-header .modal-title {
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-        
-        .modal-body {
-            padding: 2rem;
-        }
-        
-        .modal-footer {
-            border: none;
-            padding: 1.5rem;
-            background: #f8f9fa;
-        }
-        
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: #014A7F;
-            box-shadow: 0 0 0 0.2rem rgba(1, 74, 127, 0.25);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #014A7F, #0288d1);
-            border: none;
-            border-radius: 10px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0288d1, #014A7F);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(1, 74, 127, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            border: none;
-            border-radius: 10px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
             transform: translateY(-2px);
         }
+        
+        /* Main content positioning to avoid sidebar */
         body {
             padding-left: 240px;
         }
@@ -381,7 +191,7 @@ if (isset($_GET['delete'])) {
 <section class="section mt-5 mb-5" id="announcements">
 
   <div class="d-flex flex-column align-items-center text-center mt-3 mb-4">
-    <h3 class="fw-bold mb-3 custom-text">Manage News & Updates</h3>
+    <h3 class="fw-bold mb-3">Manage News & Updates</h3>
 
     <a href="adminAnnouncementsAdd.php"
        class="btn custom-btn custom-text mb-3">
@@ -485,16 +295,9 @@ if (isset($_GET['delete'])) {
               </div>
 
               <div class="mb-3">
-                <label class="form-label fw-bold">Announcement Date</label>
+                <label class="form-label fw-bold">Date</label>
                 <input type="date" name="date" class="form-control"
-                  value="<?= date('Y-m-d', strtotime($row['date'])) ?>" required
-                  max="<?= date('Y-m-d') ?>">
-                <div class="form-text">
-                  <small class="text-muted">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Current: <?= date("F d, Y", strtotime($row['date'])) ?>
-                  </small>
-                </div>
+                  value="<?= $row['date'] ?>" required>
               </div>
 
             </div>

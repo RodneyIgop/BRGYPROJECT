@@ -81,7 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .nav-items {
@@ -139,30 +143,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* ================== Section Home ================== */
         #Home {
-            padding-top: 100px;
-            /* space for fixed navbar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         /* ================== Login Container ================== */
         .login-admin {
             background-color: #fff;
-            max-width: 450px;
-            margin: 0 auto 50px;
-            padding: 40px 30px;
+            max-width: 380px;
+            margin: 0 auto;
+            padding: 25px 20px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             text-align: center;
         }
 
         .login-admin h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #014A7F;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
 
         .login-admin .logo img {
-            width: 100px;
-            margin-bottom: 20px;
+            width: 70px;
+            margin-bottom: 12px;
             display: inline-block;
         }
 
@@ -181,19 +189,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .login-admin input[type="text"],
         .login-admin input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
             border-radius: 8px;
             border: 1px solid #ced4da;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .checkrow {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: -6px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
         }
 
         .checkrow input[type="checkbox"] {
@@ -210,8 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         button.Login {
             width: 100%;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 10px;
+            font-size: 0.9rem;
             font-weight: bold;
             background-color: #014A7F;
             color: #fff;
@@ -226,15 +234,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .error-msg {
             color: #d9534f;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: 500;
             background-color: #f8d7da;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 6px;
+            font-size: 0.85rem;
         }
 
         .register-line {
-            margin-top: 15px;
+            margin-top: 10px;
+            font-size: 0.85rem;
         }
 
         .register-line a {
@@ -249,8 +259,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .back-link {
             display: inline-block;
-            margin-top: 20px;
-            font-size: 0.95rem;
+            margin-top: 8px;
+            font-size: 0.85rem;
             color: #014A7F;
         }
 
@@ -261,23 +271,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Responsive */
         @media (max-width: 576px) {
             .login-admin {
-                margin: 120px 20px 50px;
-                padding: 30px 20px;
+                margin: 0;
+                padding: 20px 15px;
             }
 
             .login-admin h1 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
 
             .login-admin input[type="text"],
             .login-admin input[type="password"] {
-                font-size: 0.95rem;
-                padding: 10px;
+                font-size: 0.85rem;
+                padding: 8px;
             }
 
             button.Login {
-                font-size: 0.95rem;
-                padding: 10px;
+                font-size: 0.85rem;
+                padding: 8px;
             }
         }
 
@@ -330,51 +340,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
 
-    
+    <div id="Home">
         <div class="login-admin">
-        <div class="logo">
-            <img src="../images/taosaharap.png" alt="Logo">
-        </div>
-        <h1>Login Now</h1>
+            <div class="logo">
+                <img src="../images/taosaharap.png" alt="Logo">
+            </div>
+            <h1>Login Now</h1>
 
-        <?php if ($error == 'invalid'): ?>
-            <div class="error-msg">Invalid Employee ID or password.</div>
-        <?php elseif ($error == 'empty'): ?>
-            <div class="error-msg">Please fill in all fields.</div>
-        <?php elseif (isset($_GET['success']) && $_GET['success'] == 'password_reset'): ?>
-            <div class="success-msg" style="color: green;">Password reset successfully! Please login with your new password.</div>
-        <?php endif; ?>
+            <?php if ($error == 'invalid'): ?>
+                <div class="error-msg">Invalid Employee ID or password.</div>
+            <?php elseif ($error == 'empty'): ?>
+                <div class="error-msg">Please fill in all fields.</div>
+            <?php endif; ?>
 
-        <form method="POST" action="adminLogin.php">
-            <label>Employee ID</label>
-            <input type="text" name="employeeID" placeholder="Enter Employee ID (e.g., ADM-1234)" required>
+            <form method="POST" action="adminLogin.php">
+                <label>Employee ID</label>
+                <input type="text" name="employeeID" placeholder="Enter Employee ID (e.g., ADM-1234)" required>
 
-            <div class="form-group password-group">
-                <label>Password</label>
-                <input type="password" name="password" id="password2" placeholder="Enter Password" required>
-                <span class="toggle-password" data-target="password2">
-                    <i class="fa-solid fa-eye"></i>
-                </span>
+                <div class="form-group password-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password2" placeholder="Enter Password" required>
+                    <span class="toggle-password" data-target="password2">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+                </div>
+
+                <div class="checkrow">
+                    <label><input type="checkbox" name="remember" value="remember"> Remember me</label>
+                    <a href="#">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="Login">LOGIN</button>
+            </form>
+
+            <div class="register-line">
+                <span>Don't have an account? </span>
+                <a href="adminregister.php">Register here</a>
             </div>
 
-            <div class="checkrow">
-                
-                <a href="adminForgotPassword.php">Forgot Password?</a>
-            </div>
-
-            <button type="submit" class="Login">LOGIN</button>
-        </form>
-
-        <div class="register-line">
-            <span>Don't have an account? </span>
-            <a href="adminregister.php">Register here</a>
+            <a href="../index.php" class="back-link">← Back to Home</a>
         </div>
-        <p class="donthave" style="margin-top: 20px;">Login as Administrator?</p>
-  <!-- <a href="../Admin/adminlogin.php" class="register">Admin Login</a> -->
-    <a href="../SuperAdmin/superadminlogin.php" class="register">Super Admin Login</a>
-
-        <a href="../index.php" class="back-link">← Back to Home</a>
-    
+    </div>
 
 
 </body>

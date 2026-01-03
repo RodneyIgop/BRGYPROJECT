@@ -49,16 +49,16 @@ if (!empty($user['birthdate'])) {
 
 // Format full name
 $nameParts = [];
-if (!empty($user['FirstName'])) {
-    $lastName = $user['FirstName'];
+if (!empty($user['LastName'])) {
+    $lastName = $user['LastName'];
     if (!empty($user['Suffix'])) {
         $lastName .= ' ' . $user['Suffix'];
     }
     $nameParts[] = $lastName;
 }
 
-if (!empty($user['LastName'])) {
-    $nameParts[] = $user['LastName'];
+if (!empty($user['FirstName'])) {
+    $nameParts[] = $user['FirstName'];
 }
 
 if (!empty($user['MiddleName'])) {

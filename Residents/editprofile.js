@@ -10,14 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Change icon based on menu state
             const icon = mobileMenuToggle.querySelector('i');
             if (sidebar.classList.contains('active')) {
-                icon.classList.remove('bi-list');
-                icon.classList.add('bi-x');
-                // Prevent body scroll when menu is open
-                document.body.style.overflow = 'hidden';
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
             } else {
-                icon.classList.remove('bi-x');
-                icon.classList.add('bi-list');
-                document.body.style.overflow = '';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         });
         
@@ -26,9 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
                 sidebar.classList.remove('active');
                 const icon = mobileMenuToggle.querySelector('i');
-                icon.classList.remove('bi-x');
-                icon.classList.add('bi-list');
-                document.body.style.overflow = '';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         });
         
@@ -37,20 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth > 768) {
                 sidebar.classList.remove('active');
                 const icon = mobileMenuToggle.querySelector('i');
-                icon.classList.remove('bi-x');
-                icon.classList.add('bi-list');
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Close menu when escape key is pressed
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                const icon = mobileMenuToggle.querySelector('i');
-                icon.classList.remove('bi-x');
-                icon.classList.add('bi-list');
-                document.body.style.overflow = '';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         });
     }
@@ -237,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const editBtn = document.getElementById('editProfile');
     const modal = document.getElementById('editProfileModal');
     const closeModal = document.getElementById('closeEditModal');
-    const cancelBtn = document.getElementById('cancelEdit');
     const form = document.getElementById('editProfileForm');
 
     if (!editBtn || !modal || !closeModal || !form) return;
@@ -260,40 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const openModal = () => { 
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        // Focus on first input
-        setTimeout(() => {
-            const firstInput = modal.querySelector('input');
-            if (firstInput) firstInput.focus();
-        }, 100);
-    };
-    
-    const hideModal = () => { 
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-    };
+    const openModal = () => { modal.style.display = 'block'; };
+    const hideModal = () => { modal.style.display = 'none'; };
 
     editBtn.addEventListener('click', openModal);
     closeModal.addEventListener('click', hideModal);
-    
-    // Handle cancel button
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', hideModal);
-    }
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => { 
-        if (e.target === modal) hideModal(); 
-    });
-    
-    // Close modal when escape key is pressed
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'block') {
-            hideModal();
-        }
-    });
+    window.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -314,12 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Show loading state
-        const submitBtn = form.querySelector('.btn-save');
-        const originalContent = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Saving...</span>';
-        submitBtn.disabled = true;
-
         fetch('submit_edit_request.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -328,24 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(r => r.json())
         .then(data => {
             if (data.success) {
-                showNotification('Profile updated successfully!', 'success');
+                showNotification('Your Edit Request is now under review by the admin', 'success');
                 hideModal();
-                // Refresh the page to show updated data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
             } else {
-                throw new Error(data.message || 'Error updating profile');
+                throw new Error(data.message || 'Error submitting request');
             }
         })
         .catch(err => {
             console.error(err);
             showNotification(err.message || 'Error submitting request', 'error');
-        })
-        .finally(() => {
-            // Restore button state
-            submitBtn.innerHTML = originalContent;
-            submitBtn.disabled = false;
         });
     });
 });

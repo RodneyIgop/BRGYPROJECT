@@ -91,21 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Verify Email - Superadmin Register</title>
     <link rel="stylesheet" href="verifySuperAdminEmail.css">
 </head>
-<style>
-    .navbar {
-  background-color: #014A7F;
-  padding: 12px 18px;
-  max-width: 100%;
-}
-input {
-  width: 95%;
-  padding: 11px 12px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  margin-bottom: 18px;
-  font-size: 1rem;
-}
-</style>
+
 <body>
 
     <nav class="navbar">

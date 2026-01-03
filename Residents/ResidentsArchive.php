@@ -61,63 +61,53 @@ if (!$fullname) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive - Barangay New Era</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="ResidentsTrackRequest.css">
 </head>
 <body>
-    <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
-        <i class="bi bi-list"></i>
-        <span class="sr-only">Menu</span>
-    </button>
-
-    <div class="sidebar">
-        <div class="logo">
-            <img src="../images/brgylogo.png" alt="Barangay Logo" class="logo-img">
-            <div class="logo-text">
-                <h2>BARANGAY NEW ERA</h2>   
-            </div>
-        </div>
-        <nav>
-             <ul>
-                <li><a href="ResidentsIndex.php" aria-label="Home"><i class="fas fa-home"></i> <span>Home</span></a></li>
-                <li><a href="ResidentsProfile.php" aria-label="Profile"><i class="fas fa-user"></i> <span>Profile</span></a></li>
-                <li><a href="ResidentsRequestDocu.php" aria-label="Document Request"><i class="fas fa-file-alt"></i> <span>Document Request</span></a></li>
-                <li><a href="residentstrackrequest.php" aria-label="My Request"><i class="fas fa-list"></i> <span>My Request</span></a></li>
-                <li class="active"><a href="#" aria-label="Archive"><i class="fas fa-archive"></i> <span>Archive</span></a></li>
-                <li class="logout"><a href="residentlogin.php" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
-            </ul>
-        </nav>
-    </div>
-
     <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../images/brgylogo.png" alt="Barangay Logo" class="logo-img">
+                <div class="logo-text">
+                    <h2>BARANGAY NEW ERA</h2>   
+                </div>
+            </div>
+            <nav>
+                 <ul>
+                    <li><a href="ResidentsIndex.php"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="ResidentsProfile.php"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="ResidentsRequestDocu.php"><i class="fas fa-file-alt"></i> Document Request</a></li>
+                    <li><a href="residentstrackrequest.php"><i class="fas fa-list"></i> My Request</a></li>
+                    <li class="active"><a href="#"><i class="fas fa-archive"></i> Archive</a></li>
+                    <li><a href="residentlogin.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
         <!-- Main Content -->
         <div class="main-content">
-            <div class="page-header">
-                <h1>Archive</h1>
-                <p class="page-description">View your cancelled and declined document requests</p>
-            </div>
+            <h1>Archive</h1>
+            <p>View your cancelled and declined document requests</p>
             
             <div class="requests-table">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Status</th>
-                                <th>Date Requested</th>
-                                <th>Document Type</th>
-                                <th>Purpose</th>
-                                <th>Reason</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Status</th>
+                            <th>Date Requested</th>
+                            <th>Document Type</th>
+                            <th>Purpose</th>
+                            <th>Reason</th>
+                            <th style = "margin-left: 2em;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 <?php
 // Debug: Show current session values
 error_log("DEBUG: uid_string = " . var_export($uid_string, true));
@@ -178,30 +168,40 @@ if ($rows && $rows->num_rows > 0) {
     </div>
 
     <!-- Reason Modal -->
-    <div id="reasonModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reasonModalTitle">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="reasonModalTitle">Request Details</h2>
-                <button class="close-modal" id="reasonClose" aria-label="Close modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="request-details">
-                    <p><strong>Request ID:</strong> <span id="r-requestId"></span></p>
-                    <p><strong>Document:</strong> <span id="r-document"></span></p>
-                    <p><strong>Purpose:</strong> <span id="r-purpose"></span></p>
-                    <p><strong>Date Requested:</strong> <span id="r-date"></span></p>
-                    <p><strong>Status:</strong> <span id="r-status"></span></p>
-                </div>
-                <div class="reason-section">
-                    <h4>Reason:</h4>
-                    <p id="r-reason"></p>
-                </div>
-            </div>
+    <div id="reasonModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:3000;">
+        <div class="modal-content" style="background:#fff;padding:30px 40px;border-radius:8px;max-width:500px;width:90%;position:relative;box-shadow:0 4px 10px rgba(0,0,0,.1);">
+            <span class="close" id="reasonClose" style="position:absolute;top:14px;right:18px;font-size:24px;font-weight:bold;color:#00386b;cursor:pointer;">&times;</span>
+            <h2 style="color:#dc3545;">Request Declined</h2>
+            <p><strong>Request ID:</strong> <span id="r-requestId"></span></p>
+            <p><strong>Document:</strong> <span id="r-document"></span></p>
+            <p><strong>Purpose:</strong> <span id="r-purpose"></span></p>
+            <p><strong>Date Requested:</strong> <span id="r-date"></span></p>
+            <hr style="margin:15px 0;">
+            <p><strong>Reason for Declination:</strong></p>
+            <p id="r-reason" style="font-style:italic; font-weight: bold; color:#dc3545; background:#f8d7da; padding:10px; border-radius:4px;"></p>
         </div>
     </div>
 
-    <script src="archive.js"></script>
+    <script>
+    // Reason Modal functionality
+    document.addEventListener('click',function(ev){
+        const btn = ev.target.closest('.reason-btn');
+        if(!btn) return;
+        ev.preventDefault();
+        document.getElementById('r-requestId').textContent = btn.dataset.id;
+        const row = btn.closest('tr');
+        document.getElementById('r-document').textContent = row ? row.children[3].textContent : '';
+        document.getElementById('r-purpose').textContent = row ? row.children[4].textContent : '';
+        document.getElementById('r-date').textContent = row ? row.children[2].textContent : '';
+        document.getElementById('r-reason').textContent = btn.dataset.reason;
+        document.getElementById('reasonModal').style.display='flex';
+    });
+    document.getElementById('reasonClose').addEventListener('click',()=>document.getElementById('reasonModal').style.display='none');
+
+    // Close modal when clicking outside
+    window.addEventListener('click',e=>{
+        if(e.target===document.getElementById('reasonModal')) document.getElementById('reasonModal').style.display='none';
+    });
+    </script>
 </body>
 </html>

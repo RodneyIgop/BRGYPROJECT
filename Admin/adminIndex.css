@@ -119,69 +119,28 @@ body {
 /* DASHBOARD GRID */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 24px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
 .card {
     background: #fff;
-    border-radius: 12px;
-    padding: 28px;
-    border: 1px solid #e1e5e9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 24px;
+    border: 1px solid #d9d9d9; /* replaced box-shadow */
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    min-height: 200px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #014A7F, #0277bd);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
-    border-color: #014A7F;
-}
-
-.card:hover::before {
-    opacity: 1;
+    gap: 12px;
+    min-height: 180px;
 }
 
 .card-header {
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-}
-
-.card-header span:first-child {
-    font-size: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 12px;
-    padding: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
 }
 
 .card-icon {
@@ -190,71 +149,30 @@ body {
 }
 
 .card-description {
-    font-size: 15px;
-    color: #6c757d;
-    line-height: 1.6;
-    font-weight: 400;
-    flex-grow: 1;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
 }
 
 .card-total {
-    font-size: 16px;
-    color: #1a1a1a;
-    font-weight: 700;
-    padding: 16px 20px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 10px;
-    border-left: 5px solid #014A7F;
-    margin: 12px 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-}
-
-.card-total:hover {
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.card-total a {
-    color: #014A7F;
-    text-decoration: none;
+    font-size: 14px;
+    color: #666;
     font-weight: 600;
-    font-size: 16px;
-    transition: color 0.2s ease;
-    display: block;
-    margin: 4px 0;
-}
-
-.card-total a:hover {
-    color: #0277bd;
-    text-decoration: underline;
 }
 
 .card-link {
     color: #014A7F;
     text-decoration: none;
     font-weight: 600;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: auto;
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #014A7F, #0277bd);
-    color: #fff;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(1, 74, 127, 0.2);
+    margin-top: 8px;
     cursor: pointer;
-    border: none;
-    justify-self: flex-start;
 }
 
 .card-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(1, 74, 127, 0.3);
-    text-decoration: none;
-    background: linear-gradient(135deg, #0277bd, #014A7F);
+    text-decoration: underline;
 }
 
 /* FOOTER */

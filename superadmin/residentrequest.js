@@ -118,37 +118,11 @@ function acceptRequest() {
     window.location.href = `generateResidentID.php?${params.toString()}`;
 }
 
-function rejectRequest(requestId, button) {
+function rejectRequest(requestId) {
     if(confirm('Are you sure you want to reject this resident request: ' + requestId + '?')) {
-        // Send AJAX request to reject the request
-        fetch('reject_request.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'requestId=' + encodeURIComponent(requestId)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Request ' + requestId + ' has been rejected successfully');
-                // Remove the row from the table
-                const row = button.closest('tr');
-                if (row) {
-                    row.remove();
-                }
-                // Check if there are no more requests
-                const tbody = document.querySelector('.admin-table tbody');
-                if (tbody && tbody.children.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No resident requests found.</td></tr>';
-                }
-            } else {
-                alert('Error rejecting request: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while rejecting the request');
-        });
+        // TODO: Implement reject request functionality via AJAX
+        alert('Request ' + requestId + ' has been rejected');
+        // TODO: Update table to remove rejected request
+        // TODO: Update database status to 'rejected'
     }
 }
