@@ -109,11 +109,37 @@ function acceptRequest() {
     window.location.href = `generateEmployeeID.php?${params.toString()}`;
 }
 
-function rejectRequest(requestId) {
+function rejectRequest(requestId, event) {
     if(confirm('Are you sure you want to reject this admin request: ' + requestId + '?')) {
-        // TODO: Implement reject request functionality via AJAX
-        alert('Request ' + requestId + ' has been rejected');
-        // TODO: Update table to remove rejected request
-        // TODO: Update database status to 'rejected'
+        // Create and send AJAX request
+        const formData = new FormData();
+        formData.append('requestId', requestId);
+        
+        fetch('reject_request.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Request ' + requestId + ' has been rejected successfully');
+                // Remove the row from the table
+                const row = event.target.closest('tr');
+                if (row) {
+                    row.remove();
+                }
+                // Check if table is empty and show message
+                const tbody = document.querySelector('.admin-table tbody');
+                if (tbody && tbody.children.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No admin requests found.</td></tr>';
+                }
+            } else {
+                alert('Error rejecting request: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while rejecting the request');
+        });
     }
 }

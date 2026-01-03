@@ -311,6 +311,7 @@ img {
 
 #acceptBtn {
   background: #014A7F;
+  color: #fff !important;
 }
 
 /* Success Popup */

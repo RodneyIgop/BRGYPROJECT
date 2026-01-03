@@ -9,14 +9,11 @@ body {
 }
 
 /* ================== Navbar ================== */
-.navbar {
+/* .navbar {
   background-color: #014A7F;
   padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   max-width: 100%;
-}
+} */
 
 .nav-items {
   display: flex;
@@ -73,7 +70,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 95%;
   padding: 11px 12px;
   border-radius: 6px;
   border: 1px solid #bbb;

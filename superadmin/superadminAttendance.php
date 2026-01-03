@@ -380,63 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 <!-- SIDEBAR -->
-<div class="sidebar">
-    <div class="sidebar-logo">
-        <img src="../images/brgylogo.png">
-        <h2>BARANGAY NEW ERA</h2>
-    </div>
-
-    <nav class="sidebar-nav">
-        <a href="superadmindashboard.php">
-            <img src="../images/home.png"> Home
-        </a>
-
-        <a href="superadminProfile.php">
-            <img src="../images/user.png"> Profile
-        </a>
-
-        <!-- ACCOUNT MANAGEMENT -->
-        <details class="sidebar-dropdown">
-            <summary>
-                <img src="../images/list.png"> Account Management
-                <img src="../images/down.png">
-            </summary>
-            <a href="superadminAdminAccs.php" class="submenu-link">
-                <img src="../images/user.png"> Manage Admin Accounts
-            </a>
-            <a href="superadminUserAccs.php" class="submenu-link">
-                <img src="../images/residents.png"> Manage Residents Accounts
-            </a>
-            <a href="superadminAccounts.php" class="submenu-link">
-                <img src="../images/user.png"> Manage Superadmin Accounts
-            </a>
-        </details>
-
-        <!-- ACTIVITY LOGS -->
-        <a href="superadminLogs.php">
-            <img src="../images/list.png"> Activity Logs
-        </a>
-
-        <!-- ATTENDANCE -->
-        <a href="superadminAttendance.php" class="active">
-            <img src="../images/residents.png"> Attendance
-        </a>
-
-        <!-- RESIDENT INFO -->
-        <a href="superadminResidents.php">
-            <img src="../images/residents.png"> Resident Information
-        </a>
-
-        <!-- ARCHIVES -->
-        <a href="superadminarchive.php">
-            <img src="../images/archive.png"> Archives
-        </a>
-
-        <button onclick="logout()">
-            <img src="../images/logout.png"> Logout
-        </button>
-    </nav>
-</div>
+<?php include 'superadminSidebar.php' ;?>
 
 <!-- MAIN CONTENT -->
 <div class="main-content">

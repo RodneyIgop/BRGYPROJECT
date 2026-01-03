@@ -129,7 +129,7 @@ try {
                                                 data-request-date="<?php echo htmlspecialchars($request['requestDate'] ?? ''); ?>"
                                                 onclick="viewRequest(this)">View</button>
                                            
-                                            <button class="action-btn reject-btn" onclick="rejectRequest('<?php echo htmlspecialchars($request['adminID']); ?>')">Reject</button>
+                                            <button class="action-btn reject-btn" onclick="rejectRequest('<?php echo htmlspecialchars($request['adminID']); ?>', event)">Reject</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

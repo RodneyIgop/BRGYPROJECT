@@ -1,51 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const navbar = document.querySelector('.navbar');
-  const burger = document.querySelector('.burger');
-  const navLinks = document.querySelector('.nav-links');
-
-  if (!navbar || !burger || !navLinks) return;
-
-  const closeMenu = () => {
-    navbar.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  };
-
-  const toggleMenu = () => {
-    const isOpen = navbar.classList.toggle('open');
-    burger.setAttribute('aria-expanded', String(isOpen));
-  };
-
-  burger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu();
-  });
-
-  // Close when clicking a nav link
-  navLinks.addEventListener('click', (e) => {
-    const target = e.target;
-    if (target && target.tagName === 'A') {
-      closeMenu();
-    }
-  });
-
-  // Close when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!navbar.contains(e.target)) {
-      closeMenu();
-    }
-  });
-
-  // Reset on resize to desktop
-  const mq = window.matchMedia('(min-width: 769px)');
-  const handleResize = () => {
-    if (mq.matches) {
-      closeMenu();
-      // Ensure nav is visible per desktop styles
-    }
-  };
-  window.addEventListener('resize', handleResize);
-});
-document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.toggle-password').forEach(toggle => {
         toggle.addEventListener('click', () => {
             const inputId = toggle.getAttribute('data-target');
@@ -65,4 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Forgot password functionality
+    const forgotPasswordLink = document.querySelector('.forgot-password');
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'forgotPassword.php';
+        });
+    }
 });

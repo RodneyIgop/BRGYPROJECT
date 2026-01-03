@@ -132,7 +132,7 @@ img, svg, video, canvas{max-width:100%;height:auto;display:block;}
 }
 
 .checkrow a{
-    margin-left:60px;
+    /* margin-left:60px; */
     text-decoration:none;
     color:#014A7F;
 }
