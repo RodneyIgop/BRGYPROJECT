@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         transition: 0.3s;
     }
     .Register:hover {
-        background-color: #2563eb;
+        background-color: #0760a0ff;
     }
 
     .register-line {

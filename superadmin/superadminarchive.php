@@ -9,39 +9,30 @@ if (!isset($_SESSION['superadmin_id'])) {
 $superadmin_name = $_SESSION['superadmin_name'] ?? 'Super Admin';
 
 // Include database connection
-require_once '../Connection/conn.php';
+require_once '../Connection/Conn.php';
 
-// Fetch all account requests from adminrequests table
-$all_requests = [];
-$requests_query = $conn->prepare("SELECT * FROM adminrequests ORDER BY requestDate DESC");
-if ($requests_query) {
-    $requests_query->execute();
-    $requests_result = $requests_query->get_result();
-    while ($row = $requests_result->fetch_assoc()) {
-        $all_requests[] = $row;
+// Fetch rejected admin requests from the rejected_admin_requests table
+$rejected_admins = [];
+$rejected_query = $conn->prepare("SELECT * FROM rejected_admin_requests ORDER BY rejectionDate DESC");
+if ($rejected_query) {
+    $rejected_query->execute();
+    $rejected_result = $rejected_query->get_result();
+    while ($row = $rejected_result->fetch_assoc()) {
+        $rejected_admins[] = $row;
     }
-    $requests_query->close();
+    $rejected_query->close();
 }
 
-// Separate residents and admins based on whether they exist in admintbl
-$declined_residents = [];
-$declined_admins = [];
-
-foreach ($all_requests as $request) {
-    // Check if this email exists in admintbl (meaning it's an admin request)
-    $admin_check = $conn->prepare("SELECT email FROM admintbl WHERE email = ?");
-    $admin_check->bind_param('s', $request['email']);
-    $admin_check->execute();
-    $admin_result = $admin_check->get_result();
-    
-    if ($admin_result && $admin_result->num_rows > 0) {
-        // This is an admin request
-        $declined_admins[] = $request;
-    } else {
-        // This is a resident request
-        $declined_residents[] = $request;
+// Fetch rejected resident requests from the rejected_resident_requests table
+$rejected_residents = [];
+$resident_query = $conn->prepare("SELECT * FROM rejected_resident_requests ORDER BY rejectionDate DESC");
+if ($resident_query) {
+    $resident_query->execute();
+    $resident_result = $resident_query->get_result();
+    while ($row = $resident_result->fetch_assoc()) {
+        $rejected_residents[] = $row;
     }
-    $admin_check->close();
+    $resident_query->close();
 }
 
 $conn->close();
@@ -185,25 +176,29 @@ td {
                     <th>Email</th>
                     <th>Contact Number</th>
                     <th>Date Requested</th>
+                    <th>Date Rejected</th>
+                    <th>Rejected By</th>
                     <th>Status</th>
                 </tr>
 
-                <?php if (!empty($declined_residents)): ?>
-                    <?php foreach ($declined_residents as $index => $resident): ?>
+                <?php if (!empty($rejected_residents)): ?>
+                    <?php foreach ($rejected_residents as $index => $resident): ?>
                         <tr>
                             <td><?php echo $index + 1; ?></td>
                             <td><?php echo htmlspecialchars($resident['lastname'] . ', ' . $resident['firstname'] . ' ' . $resident['middlename'] . ' ' . $resident['suffix']); ?></td>
                             <td><?php echo htmlspecialchars($resident['email']); ?></td>
                             <td><?php echo htmlspecialchars($resident['contactnumber']); ?></td>
                             <td><?php echo date('M d, Y', strtotime($resident['requestDate'])); ?></td>
+                            <td><?php echo date('M d, Y H:i', strtotime($resident['rejectionDate'])); ?></td>
+                            <td><?php echo htmlspecialchars($resident['rejected_by']); ?></td>
                             <td><span class="status-declined">Rejected</span></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px;">
+                        <td colspan="8" style="text-align: center; padding: 40px;">
                             <i class="bi bi-person-x" style="font-size: 48px; color: #ccc;"></i>
-                            <p style="color: #666; margin-top: 10px;">No declined resident accounts found.</p>
+                            <p style="color: #666; margin-top: 10px;">No rejected resident accounts found.</p>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -219,25 +214,29 @@ td {
                     <th>Email</th>
                     <th>Contact Number</th>
                     <th>Date Requested</th>
+                    <th>Date Rejected</th>
+                    <th>Rejected By</th>
                     <th>Status</th>
                 </tr>
 
-                <?php if (!empty($declined_admins)): ?>
-                    <?php foreach ($declined_admins as $index => $admin): ?>
+                <?php if (!empty($rejected_admins)): ?>
+                    <?php foreach ($rejected_admins as $index => $admin): ?>
                         <tr>
                             <td><?php echo $index + 1; ?></td>
                             <td><?php echo htmlspecialchars($admin['lastname'] . ', ' . $admin['firstname'] . ' ' . $admin['middlename'] . ' ' . $admin['suffix']); ?></td>
                             <td><?php echo htmlspecialchars($admin['email']); ?></td>
                             <td><?php echo htmlspecialchars($admin['contactnumber']); ?></td>
                             <td><?php echo date('M d, Y', strtotime($admin['requestDate'])); ?></td>
+                            <td><?php echo date('M d, Y H:i', strtotime($admin['rejectionDate'])); ?></td>
+                            <td><?php echo htmlspecialchars($admin['rejected_by']); ?></td>
                             <td><span class="status-declined">Rejected</span></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px;">
+                        <td colspan="8" style="text-align: center; padding: 40px;">
                             <i class="bi bi-person-x" style="font-size: 48px; color: #ccc;"></i>
-                            <p style="color: #666; margin-top: 10px;">No declined admin accounts found.</p>
+                            <p style="color: #666; margin-top: 10px;">No rejected admin accounts found.</p>
                         </td>
                     </tr>
                 <?php endif; ?>
