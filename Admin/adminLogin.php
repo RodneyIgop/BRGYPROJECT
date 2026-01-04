@@ -12,16 +12,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($employeeID) || empty($password)) {
         $error = 'empty';
     } else {
-        $stmt = $conn->prepare('SELECT AdminID, firstname, lastname, password FROM admintbl WHERE employeeID = ?');
+        $stmt = $conn->prepare('SELECT AdminID, firstname, lastname, password, status FROM admintbl WHERE employeeID = ?');
         $stmt->bind_param('s', $employeeID);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($adminID, $firstname, $lastname, $stored_password);
+            $stmt->bind_result($adminID, $firstname, $lastname, $stored_password, $status);
             $stmt->fetch();
 
-            if ($password === $stored_password) {
+            // Check if account is blocked
+            if (isset($status) && $status === 'blocked') {
+                $error = 'blocked';
+                
+                // Log blocked login attempt
+                logActivity($conn, 0, $employeeID, 'Admin', ACTION_LOGIN, 'Blocked admin attempted to log in', 'adminLogin.php', 'Failed');
+            } elseif ($password === $stored_password) {
                 $_SESSION['admin_id'] = $adminID;
                 $_SESSION['admin_name'] = $firstname . ' ' . $lastname;
                 
@@ -341,6 +347,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="error-msg">Invalid Employee ID or password.</div>
         <?php elseif ($error == 'empty'): ?>
             <div class="error-msg">Please fill in all fields.</div>
+        <?php elseif ($error == 'blocked'): ?>
+            <div class="error-msg">Your account has been blocked by the Super Administrator. You will not be able to access the system until your account is unblocked.</div>
         <?php elseif (isset($_GET['success']) && $_GET['success'] == 'password_reset'): ?>
             <div class="success-msg" style="color: green;">Password reset successfully! Please login with your new password.</div>
         <?php endif; ?>

@@ -1,17 +1,20 @@
 <?php
 session_start();
 
-// Check if admin is logged in
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: adminLogin.php');
-    exit;
-}
+// Include authentication helper
+require_once __DIR__ . '/../Connection/admin_auth.php';
+require_once __DIR__ . '/../Connection/conn.php';
+
+// Validate admin session and check account status
+validateAdminSession($conn);
 
 $admin_name = $_SESSION['admin_name'] ?? 'Admin';
+$admin_id = $_SESSION['admin_id'];
 $current_date = date('l, F j, Y');
 $current_time = date('g:i A');
 
-require_once __DIR__ . '/../Connection/conn.php';
+// Update admin activity
+updateAdminActivity($conn, $admin_id);
 
 $countPending = 0;
 $countApprovedPickup = 0;

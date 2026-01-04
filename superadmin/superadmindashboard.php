@@ -314,7 +314,7 @@ function timeAgo($datetime) {
             <div class="card-description">
                 Manage admin approvals, promotions, and account access restrictions.
             </div>
-            <a href="superadminUsers.php" class="card-link">Open →</a>
+            <a href="superadminAdminAccs.php" class="card-link">Open →</a>
         </div>
 
         <div class="card">

@@ -9,10 +9,58 @@ if (!isset($_SESSION['superadmin_id'])) {
 require_once '../Connection/Conn.php';
 $db = $conn; // Use the global connection variable from Conn.php
 
+// Add status column if it doesn't exist
+try {
+    $checkColumn = $db->query("SHOW COLUMNS FROM admintbl LIKE 'status'");
+    if ($checkColumn->num_rows == 0) {
+        $sql = "ALTER TABLE admintbl ADD COLUMN status ENUM('active', 'blocked') NOT NULL DEFAULT 'active'";
+        $db->query($sql);
+    }
+} catch (Exception $e) {
+    // Handle column addition error silently
+}
+
+// Add last_activity column if it doesn't exist
+try {
+    $checkColumn = $db->query("SHOW COLUMNS FROM admintbl LIKE 'last_activity'");
+    if ($checkColumn->num_rows == 0) {
+        $sql = "ALTER TABLE admintbl ADD COLUMN last_activity TIMESTAMP NULL DEFAULT NULL";
+        $db->query($sql);
+    }
+} catch (Exception $e) {
+    // Handle column addition error silently
+}
+
+// Handle block/unblock actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $adminId = $_POST['admin_id'] ?? '';
+    $action = $_POST['action'];
+    
+    if ($action === 'block' || $action === 'unblock') {
+        try {
+            $newStatus = $action === 'block' ? 'blocked' : 'active';
+            $stmt = $db->prepare("UPDATE admintbl SET status = ? WHERE AdminID = ?");
+            $stmt->bind_param('si', $newStatus, $adminId);
+            $stmt->execute();
+            $stmt->close();
+            
+            // Log the action
+            $actionText = $action === 'block' ? 'blocked' : 'unblocked';
+            error_log("Admin ID $adminId has been $actionText by superadmin");
+            
+            // Redirect to prevent form resubmission
+            header('Location: viewadminaccs.php?status=' . $action . '&success=1');
+            exit;
+        } catch (Exception $e) {
+            $error_message = "Error updating admin status: " . $e->getMessage();
+        }
+    }
+}
+
 // Fetch admin accounts from database
 $admins = [];
 try {
-    $stmt = $db->prepare("SELECT adminID, employeeID, LastName, FirstName, MiddleName, Suffix, Email, ContactNumber, birthdate, age, profile_picture FROM admintbl ORDER BY LastName, FirstName");
+    $stmt = $db->prepare("SELECT adminID, employeeID, LastName, FirstName, MiddleName, Suffix, Email, ContactNumber, birthdate, age, profile_picture, status FROM admintbl ORDER BY LastName, FirstName");
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -66,7 +114,21 @@ try {
                 <div class="error-message">
                     <?php echo htmlspecialchars($error_message); ?>
                 </div>
-            <?php else: ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'block'): ?>
+                    <div class="success-message" style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px;">
+                        Admin account has been successfully blocked.
+                    </div>
+                <?php elseif (isset($_GET['status']) && $_GET['status'] == 'unblock'): ?>
+                    <div class="success-message" style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px;">
+                        Admin account has been successfully unblocked.
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+            
+            <?php if (!isset($error_message)): ?>
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>
@@ -88,9 +150,10 @@ try {
                                 <?php foreach ($admins as $admin): ?>
                                     <?php 
                                     $fullname = trim($admin['FirstName'] . ' ' . $admin['MiddleName'] . ' ' . $admin['LastName'] . ' ' . $admin['Suffix']);
-                                    // Default status since Status column doesn't exist in database
-                                    $statusClass = 'active';
-                                    $statusText = 'Active';
+                                    // Use actual status from database
+                                    $status = isset($admin['status']) ? $admin['status'] : 'active';
+                                    $statusClass = $status === 'blocked' ? 'blocked' : 'active';
+                                    $statusText = $status === 'blocked' ? 'Blocked' : 'Active';
                                     ?>
                                     <tr>
                                         <td><?php 
@@ -116,7 +179,20 @@ try {
                                                     data-age="<?php echo htmlspecialchars($admin['age'] ?? ''); ?>"
                                                     data-profile-picture="<?php echo htmlspecialchars($admin['profile_picture'] ?? ''); ?>"
                                                     onclick="viewAdmin(this)">View</button>
-                                            <button class="action-btn block-btn" onclick="blockAdmin('<?php echo htmlspecialchars($admin['adminID']); ?>')">Block</button>
+                                            
+                                            <?php if ($status === 'active'): ?>
+                                                <form method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to block this admin account?')">
+                                                    <input type="hidden" name="action" value="block">
+                                                    <input type="hidden" name="admin_id" value="<?php echo htmlspecialchars($admin['adminID']); ?>">
+                                                    <button type="submit" class="action-btn block-btn">Block</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <form method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to unblock this admin account?')">
+                                                    <input type="hidden" name="action" value="unblock">
+                                                    <input type="hidden" name="admin_id" value="<?php echo htmlspecialchars($admin['adminID']); ?>">
+                                                    <button type="submit" class="action-btn unblock-btn">Unblock</button>
+                                                </form>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
