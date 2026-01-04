@@ -18,16 +18,15 @@ $pending = $_SESSION['pending_superadmin'];
 $expiresSeconds = 600;
 if (!empty($pending['created_at']) && (time() - (int)$pending['created_at']) > $expiresSeconds) {
     unset($_SESSION['pending_superadmin']);
-    die('Verification code expired. Please register again.');
+    $error_message = 'Your verification session has expired. Please restart the registration process.';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $submitted_code = trim($_POST['verificationcode'] ?? '');
 
     if ($submitted_code !== (string)$pending['code']) {
-        die('Invalid verification code.');
-    }
-
+        $error_message = 'The verification code you entered is incorrect. Please check your email and try again.';
+    } else {
     $maxAttempts = 10;
     $employeeId = '';
     for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
@@ -46,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($employeeId === '') {
-        die('Could not generate employee ID. Please try again.');
-    }
+        $error_message = 'We were unable to generate your employee ID at this time. Please try again later.';
+    } else {
     $_SESSION['pending_superadmin']['employee_id'] = $employeeId;
     $_SESSION['pending_superadmin']['employee_created_at'] = time();
 
@@ -73,13 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Body    = 'Your superadmin employee ID is <strong>' . htmlspecialchars($employeeId) . '</strong>.';
 
         $mail->send();
+        header('Location: superadminEmployeeId.php');
+        exit;
     } catch (Exception $e) {
         unset($_SESSION['pending_superadmin']);
-        die('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+        $error_message = 'We encountered an issue sending your employee ID email. Please try again later.';
     }
-
-    header('Location: superadminEmployeeId.php');
-    exit;
+    }
+    }
 }
 ?>
 
@@ -105,6 +105,16 @@ input {
   margin-bottom: 18px;
   font-size: 1rem;
 }
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: #c33;
+    font-size: 14px;
+    text-align: center;
+}
 </style>
 <body>
 
@@ -119,6 +129,12 @@ input {
     <main>
         <div class="card">
             <h2>Verify Your Email</h2>
+
+            <?php if (isset($error_message)): ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($error_message); ?>
+                </div>
+            <?php endif; ?>
 
             <p class="info-text">
                 A verification code has been sent to <strong><?php echo htmlspecialchars($pending['data']['Email']); ?></strong>

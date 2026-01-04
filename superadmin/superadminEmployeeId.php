@@ -9,6 +9,13 @@ if (!isset($_SESSION['pending_superadmin'])) {
 
 $pending = $_SESSION['pending_superadmin'];
 
+// Check for session expiration (10 minutes after employee ID creation)
+$expiresSeconds = 600;
+if (!empty($pending['employee_created_at']) && (time() - (int)$pending['employee_created_at']) > $expiresSeconds) {
+    unset($_SESSION['pending_superadmin']);
+    $error_message = 'Your session has expired. Please restart the registration process.';
+}
+
 if (empty($pending['employee_id'])) {
     header('Location: superadminVerify.php');
     exit;
@@ -19,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $expected = (string)$pending['employee_id'];
 
     if ($submitted !== $expected) {
-        die('Invalid employee ID.');
-    }
+        $error_message = 'The employee ID you entered is incorrect. Please check your email and try again.';
+    } else {
 
     $data = $pending['data'];
 
@@ -33,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($current_count >= 2) {
         unset($_SESSION['pending_superadmin']);
-        die('Maximum number of superadmin accounts (2) has been reached. No new superadmin accounts can be created at this time.');
-    }
+        $error_message = 'The maximum number of superadmin accounts has been reached. No new accounts can be created at this time.';
+    } else {
 
     $stmt = $conn->prepare('SELECT id FROM superadmin WHERE Email = ?');
     $stmt->bind_param('s', $data['Email']);
@@ -43,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->num_rows > 0) {
         $stmt->close();
         unset($_SESSION['pending_superadmin']);
-        die('Email already registered as a superadmin account');
-    }
+        $error_message = 'This email is already registered as a superadmin account. Please use a different email or contact support.';
+    } else {
     $stmt->close();
 
     $stmt = $conn->prepare('SELECT id FROM superadmin WHERE employeeID = ?');
@@ -54,8 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->num_rows > 0) {
         $stmt->close();
         unset($_SESSION['pending_superadmin']);
-        die('Employee ID already registered as a superadmin account');
-    }
+        $error_message = 'This employee ID is already registered as a superadmin account. Please contact support if you believe this is an error.';
+    } else {
     $stmt->close();
 
     $stmt = $conn->prepare('INSERT INTO superadmin (employeeID, LastName, FirstName, MiddleName, Suffix, Email, Password, verificationcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
@@ -75,9 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['pending_superadmin']);
         header('Location: superadminlogin.php?registered=success');
         exit;
+    } else {
+        $error_message = 'A database error occurred while processing your registration. Please try again later.';
     }
-
-    die('Database error: ' . $stmt->error);
+    }
+    }
+    }
+    }
 }
 ?>
 
@@ -100,6 +111,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     border-radius: 6px;
     margin-bottom: 18px;
 }
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: #c33;
+    font-size: 14px;
+    text-align: center;
+}
 </style>
 <body>
 
@@ -117,6 +138,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card">
 
             <h2>Enter Employee ID</h2>
+
+            <?php if (isset($error_message)): ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($error_message); ?>
+                </div>
+            <?php endif; ?>
 
             <p class="info-text">
                 Your employee ID was sent to 

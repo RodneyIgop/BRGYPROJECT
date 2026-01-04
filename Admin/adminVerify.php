@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $submitted_code = trim($_POST['verificationcode'] ?? '');
     
     if ($submitted_code !== (string)$pending['code']) {
-        die('Invalid verification code.');
-    }
+        $error_message = 'The verification code you entered is incorrect. Please check your email and try again.';
+    } else {
     
     // Code is valid, insert admin request into database
     $data = $pending['data'];
@@ -45,9 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['pending_admin']);
         $verification_success = true;
     } else {
-        die('Database error: ' . $stmt->error);
+        $error_message = 'A database error occurred while processing your registration. Please try again later.';
     }
     $stmt->close();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -148,6 +149,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     .Register:hover {
         background-color: #0760a0ff;
+    }
+    .error-message {
+        background-color: #fee;
+        border: 1px solid #fcc;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 20px;
+        color: #c33;
+        font-size: 14px;
+        text-align: center;
     }
 
     .register-line {
@@ -253,6 +264,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="register-box">
         <h1>Verify Email</h1>
+        
+        <?php if (isset($error_message)): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($error_message); ?>
+            </div>
+        <?php endif; ?>
+        
         <p>A verification code has been sent to <strong><?php echo htmlspecialchars($pending['data']['email']); ?></strong></p>
         
         <form method="POST" class="form-grid">

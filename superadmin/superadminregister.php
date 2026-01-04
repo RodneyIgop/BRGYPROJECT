@@ -671,8 +671,7 @@
     <div id="successPopup" class="success-popup">
         <div class="success-popup-content">
             <h3>Registration Successful</h3>
-            <p style="font-size: 12px; color: #666;">Your account is under review by the superadmin. Your Account ID
-                will be provided after the review.</p>
+            <p style="font-size: 12px; color: #666;">  Thanks for registering. We’ll now take you to the verification page to complete your setup.</p>
             <button class="success-popup-btn" onclick="closeSuccessPopup()">OK</button>
         </div>
     </div>
