@@ -48,31 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
             $insertStmt->execute();
             $insertStmt->close();
             
-            // Create admin archive file
-            $archiveData = [
-                'type' => 'admin',
-                'RequestID' => $requestDetails['RequestID'],
-                'lastname' => $requestDetails['lastname'],
-                'firstname' => $requestDetails['firstname'],
-                'middlename' => $requestDetails['middlename'],
-                'suffix' => $requestDetails['suffix'],
-                'birthdate' => $requestDetails['birthdate'],
-                'age' => $requestDetails['age'],
-                'email' => $requestDetails['email'],
-                'contactnumber' => $requestDetails['contactnumber'],
-                'requestDate' => $requestDetails['requestDate'],
-                'rejectionDate' => date('Y-m-d H:i:s'),
-                'rejectedBy' => $rejectedBy,
-                'status' => 'rejected'
-            ];
-            
-            $archiveFilename = 'archieved/admin_request_' . $requestId . '_' . date('Y-m-d_H-i-s') . '.json';
-            $archiveContent = json_encode($archiveData, JSON_PRETTY_PRINT);
-            
-            // Create archive file
-            if (file_put_contents($archiveFilename, $archiveContent) === false) {
-                error_log("Failed to create admin archive file: " . $archiveFilename);
-            }
             
             // Delete from adminrequests
             $deleteStmt = $conn->prepare("DELETE FROM adminrequests WHERE RequestID = ?");
@@ -111,33 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
                 $insertStmt->execute();
                 $insertStmt->close();
                 
-                // Create resident archive file
-                $archiveData = [
-                    'type' => 'resident',
-                    'RequestID' => $residentDetails['RequestID'],
-                    'lastname' => $residentDetails['LastName'],
-                    'firstname' => $residentDetails['FirstName'],
-                    'middlename' => $residentDetails['MiddleName'],
-                    'suffix' => $residentDetails['Suffix'],
-                    'birthdate' => $residentDetails['birthdate'],
-                    'age' => $residentDetails['Age'],
-                    'email' => $residentDetails['email'],
-                    'contactnumber' => $residentDetails['ContactNumber'],
-                    'address' => $residentDetails['address'],
-                    'CensusNumber' => $residentDetails['CensusNumber'],
-                    'requestDate' => $residentDetails['dateRequested'],
-                    'rejectionDate' => date('Y-m-d H:i:s'),
-                    'rejectedBy' => $rejectedBy,
-                    'status' => 'rejected'
-                ];
-                
-                $archiveFilename = 'archieved/resident_request_' . $requestId . '_' . date('Y-m-d_H-i-s') . '.json';
-                $archiveContent = json_encode($archiveData, JSON_PRETTY_PRINT);
-                
-                // Create archive file
-                if (file_put_contents($archiveFilename, $archiveContent) === false) {
-                    error_log("Failed to create resident archive file: " . $archiveFilename);
-                }
                 
                 // Delete from userrequest
                 $deleteStmt = $conn->prepare("DELETE FROM userrequest WHERE RequestID = ?");
@@ -156,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
         // Commit transaction
         $conn->commit();
         
-        echo json_encode(['success' => true, 'message' => 'Request rejected and archived successfully']);
+        echo json_encode(['success' => true, 'message' => 'Request rejected successfully']);
         
     } catch (Exception $e) {
         $conn->rollback();
