@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/Connection/conn.php';
 
+// Set timezone to Philippines
+date_default_timezone_set('Asia/Manila');
+
 // Handle message submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $fullname = trim($_POST['fullname'] ?? '');

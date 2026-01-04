@@ -1,0 +1,16 @@
+{
+    "type": "admin",
+    "RequestID": 1,
+    "lastname": "ACCOUNT",
+    "firstname": "ADMIN",
+    "middlename": "N",
+    "suffix": "",
+    "birthdate": "2005-08-13",
+    "age": 20,
+    "email": "geraldlouissumaylo@gmail.com",
+    "contactnumber": 2147483647,
+    "requestDate": "2026-01-04 16:14:49",
+    "rejectionDate": "2026-01-04 09:15:22",
+    "rejectedBy": "SUPERADMIN ACCOUNT",
+    "status": "rejected"
+}

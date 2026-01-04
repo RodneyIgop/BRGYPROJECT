@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Set timezone to Philippines
+date_default_timezone_set('Asia/Manila');
+
 // Check if admin is logged in
 if (!isset($_SESSION['admin_id'])) {
     header('Location: adminLogin.php');
@@ -54,9 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $stmt = null;
     if ($dateColumnName && preg_match('/^[A-Za-z0-9_]+$/', $dateColumnName)) {
         $sql = 'INSERT INTO messages (Fullname, email, contactnumber, message, `' . $dateColumnName . '`) VALUES (?, ?, ?, ?, ?)';
-        $nowValue = (strpos((string)$dateColumnType, 'date') !== false && strpos((string)$dateColumnType, 'time') === false)
-            ? date('Y-m-d')
-            : date('Y-m-d H:i:s');
+        $nowValue = date('Y-m-d H:i:s'); // Always use full datetime for real-time timestamp
         $stmt = $conn->prepare($sql);
         if ($stmt) {
             $stmt->bind_param('ssiss', $fullname, $email, $contactnumber, $message, $nowValue);
