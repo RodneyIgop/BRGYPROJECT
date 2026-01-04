@@ -1073,12 +1073,12 @@ body {
 }
 
 .generate-btn {
-    background-color: #007bff;
+    background-color: #014A7F;
     color: white;
 }
 
 .generate-btn:hover {
-    background-color: #0056b3;
+    background-color: #0e5e97;
 }
 
 .send-btn {

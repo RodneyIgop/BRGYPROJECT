@@ -186,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send'])) {
             max-height: calc(100vh - 120px);
             overflow-y: auto;
         }
+        
     </style>
 </head>
 <body>
@@ -215,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send'])) {
         <div class="page-header">
             <h1>Generate Employee ID</h1>
             <a href="adminrequests.php" class="back-btn" style="text-decoration: none; display: inline-block; margin-left: auto;">
-                <button style="background: #6c757d; margin-bottom: -1em; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                <button style="background: #014A7F; margin-bottom: -1em; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
                     ← Back to Admin Requests
                 </button>
             </a>
