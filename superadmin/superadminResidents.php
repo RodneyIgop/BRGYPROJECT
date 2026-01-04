@@ -9,15 +9,47 @@ require_once '../Connection/conn.php';
 /* ===============================
    AJAX API
 ================================ */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    header('Content-Type: application/json');
-
-    function post($k)
-    {
-        return $_POST[$k] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
+    if ($_GET['action'] === 'delete' && isset($_GET['resident_id'])) {
+        $stmt = $conn->prepare("DELETE FROM residents WHERE resident_id=?");
+        $stmt->bind_param("i", $_GET['resident_id']);
+        if ($stmt->execute()) {
+            echo "<script>alert('Resident deleted successfully!'); window.location.href='superadminResidents.php';</script>";
+        } else {
+            echo "<script>alert('Failed to delete resident'); window.location.href='superadminResidents.php';</script>";
+        }
+        exit;
     }
+    
+    if ($_GET['action'] === 'view' && isset($_GET['resident_id'])) {
+        $stmt = $conn->prepare("SELECT * FROM residents WHERE resident_id=?");
+        $stmt->bind_param("i", $_GET['resident_id']);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        if ($res) {
+            $view_resident = $res;
+        } else {
+            echo "<script>alert('Resident not found'); window.location.href='superadminResidents.php';</script>";
+            exit;
+        }
+    }
+    
+    if ($_GET['action'] === 'edit' && isset($_GET['resident_id'])) {
+        $stmt = $conn->prepare("SELECT * FROM residents WHERE resident_id=?");
+        $stmt->bind_param("i", $_GET['resident_id']);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        if ($res) {
+            $edit_resident = $res;
+        } else {
+            echo "<script>alert('Resident not found'); window.location.href='superadminResidents.php';</script>";
+            exit;
+        }
+    }
+}
 
-    if ($_POST['action'] === 'add') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
+    if ($_GET['action'] === 'add') {
         $stmt = $conn->prepare("
             INSERT INTO residents
             (full_name, date_of_birth, sex, civil_status, address, contact_number)
@@ -25,18 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         ");
         $stmt->bind_param(
             "ssssss",
-            post('fullName'),
-            post('dateOfBirth'),
-            post('sex'),
-            post('civilStatus'),
-            post('address'),
-            post('contactNumber')
+            $_POST['fullName'],
+            $_POST['dateOfBirth'],
+            $_POST['sex'],
+            $_POST['civilStatus'],
+            $_POST['address'],
+            $_POST['contactNumber']
         );
-        echo json_encode(['success' => $stmt->execute()]);
+        if ($stmt->execute()) {
+            echo "<script>alert('Resident added successfully!'); window.location.href='superadminResidents.php';</script>";
+        } else {
+            echo "<script>alert('Failed to add resident'); window.location.href='superadminResidents.php';</script>";
+        }
         exit;
     }
-
-    if ($_POST['action'] === 'edit') {
+    
+    if ($_GET['action'] === 'edit') {
         $stmt = $conn->prepare("
             UPDATE residents SET
             full_name=?, date_of_birth=?, sex=?, civil_status=?, address=?, contact_number=?
@@ -44,34 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         ");
         $stmt->bind_param(
             "ssssssi",
-            post('fullName'),
-            post('dateOfBirth'),
-            post('sex'),
-            post('civilStatus'),
-            post('address'),
-            post('contactNumber'),
-            post('residentId')
+            $_POST['fullName'],
+            $_POST['dateOfBirth'],
+            $_POST['sex'],
+            $_POST['civilStatus'],
+            $_POST['address'],
+            $_POST['contactNumber'],
+            $_POST['residentId']
         );
-        echo json_encode(['success' => $stmt->execute()]);
+        if ($stmt->execute()) {
+            echo "<script>alert('Resident updated successfully!'); window.location.href='superadminResidents.php';</script>";
+        } else {
+            echo "<script>alert('Failed to update resident'); window.location.href='superadminResidents.php';</script>";
+        }
         exit;
     }
-
-    if ($_POST['action'] === 'delete') {
-        $stmt = $conn->prepare("DELETE FROM residents WHERE resident_id=?");
-        $stmt->bind_param("i", post('residentId'));
-        echo json_encode(['success' => $stmt->execute()]);
-        exit;
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'getDetails') {
-    header('Content-Type: application/json');
-    $stmt = $conn->prepare("SELECT * FROM residents WHERE resident_id=?");
-    $stmt->bind_param("i", $_GET['residentId']);
-    $stmt->execute();
-    $res = $stmt->get_result()->fetch_assoc();
-    echo json_encode(['success' => (bool) $res, 'resident' => $res]);
-    exit;
 }
 
 /* ===============================
@@ -528,7 +551,7 @@ $conn->close();
             </div>
         </div>
 
-        <button class="btn-add" onclick="openAdd()">Add Resident</button>
+        <button class="btn-add" onclick="document.getElementById('addModal').style.display='block'">Add Resident</button>
 
         <input type="text" id="searchResidents" placeholder="Search..." style="margin:15px 0 ">
 
@@ -550,11 +573,11 @@ $conn->close();
                                 <td><?= htmlspecialchars($r[$c]) ?></td>
                             <?php endif; endforeach; ?>
                         <td class="action-buttons">
-                            <button class="btn-view" onclick="viewResident(<?= $r['resident_id'] ?>)"><i
+                            <button class="btn-view" onclick="window.location.href='superadminResidents.php?action=view&resident_id=<?= $r['resident_id'] ?>'"><i
                                     class="bi bi-eye"></i></button>
-                            <button class="btn-edit" onclick="editResident(<?= $r['resident_id'] ?>)"><i
+                            <button class="btn-edit" onclick="window.location.href='superadminResidents.php?action=edit&resident_id=<?= $r['resident_id'] ?>'"><i
                                     class="bi bi-pencil"></i></button>
-                            <button class="btn-delete" onclick="deleteResident(event,<?= $r['resident_id'] ?>)"><i
+                            <button class="btn-delete" onclick="if(confirm('Delete resident?')) window.location.href='superadminResidents.php?action=delete&resident_id=<?= $r['resident_id'] ?>'"><i
                                     class="bi bi-trash"></i></button>
                         </td>
                     </tr>
@@ -567,10 +590,10 @@ $conn->close();
     <div id="addModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add Resident</h3><span onclick="closeModal('addModal')">&times;</span>
+                <h3>Add Resident</h3><span onclick="document.getElementById('addModal').style.display='none'">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="addForm">
+                <form action="superadminResidents.php?action=add" method="post">
                     <input name="fullName" placeholder="Full Name" required>
                     <input type="date" name="dateOfBirth" required>
                     <select name="sex">
@@ -584,8 +607,8 @@ $conn->close();
                     <textarea name="address" placeholder="Address"></textarea>
                     <input name="contactNumber" placeholder="Contact">
                     <div class="form-buttons">
-                        <button type="button" class="btn-cancel" onclick="closeModal('addModal')">Cancel</button>
-                        <button class="btn-save">Save</button>
+                        <button type="button" class="btn-cancel" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+                        <button type="submit" class="btn-save">Save</button>
                     </div>
                 </form>
             </div>
@@ -596,26 +619,26 @@ $conn->close();
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Edit Resident</h3><span onclick="closeModal('editModal')">&times;</span>
+                <h3>Edit Resident</h3><span onclick="document.getElementById('editModal').style.display='none'">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="editForm">
-                    <input type="hidden" name="residentId" id="eid">
-                    <input name="fullName" id="efull">
-                    <input type="date" name="dateOfBirth" id="edob">
-                    <select name="sex" id="esex">
-                        <option>Male</option>
-                        <option>Female</option>
+                <form id="editForm" action="superadminResidents.php?action=edit" method="post">
+                    <input type="hidden" name="residentId" value="<?= $edit_resident['resident_id'] ?? '' ?>">
+                    <input name="fullName" value="<?= $edit_resident['full_name'] ?? '' ?>">
+                    <input type="date" name="dateOfBirth" value="<?= $edit_resident['date_of_birth'] ?? '' ?>">
+                    <select name="sex">
+                        <option value="Male" <?= ($edit_resident['sex'] ?? '') === 'Male' ? 'selected' : '' ?>>Male</option>
+                        <option value="Female" <?= ($edit_resident['sex'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
                     </select>
-                    <select name="civilStatus" id="ecivil">
-                        <option>Single</option>
-                        <option>Married</option>
+                    <select name="civilStatus">
+                        <option value="Single" <?= ($edit_resident['civil_status'] ?? '') === 'Single' ? 'selected' : '' ?>>Single</option>
+                        <option value="Married" <?= ($edit_resident['civil_status'] ?? '') === 'Married' ? 'selected' : '' ?>>Married</option>
                     </select>
-                    <textarea name="address" id="eaddr"></textarea>
-                    <input name="contactNumber" id="econtact">
+                    <textarea name="address"><?= $edit_resident['address'] ?? '' ?></textarea>
+                    <input name="contactNumber" value="<?= $edit_resident['contact_number'] ?? '' ?>">
                     <div class="form-buttons">
-                        <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Cancel</button>
-                        <button class="btn-save">Update</button>
+                        <button type="button" class="btn-cancel" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
+                        <button type="submit" class="btn-save">Update</button>
                     </div>
                 </form>
             </div>
@@ -626,11 +649,27 @@ $conn->close();
     <div id="viewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Resident Details</h3><span onclick="closeModal('viewModal')">&times;</span>
+                <h3>Resident Details</h3><span onclick="document.getElementById('viewModal').style.display='none'">&times;</span>
             </div>
-            <div class="modal-body" id="viewBody"></div>
+            <div class="modal-body" id="viewBody">
+                <?php if (isset($view_resident)): ?>
+                    <?php foreach ($view_resident as $key => $value): ?>
+                        <?php if ($key !== 'resident_id'): ?>
+                            <p><strong><?= ucwords(str_replace('_', ' ', $key)) ?>:</strong> <?= htmlspecialchars($value) ?></p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
+
+    <?php if (isset($edit_resident)): ?>
+        <script>document.getElementById('editModal').style.display='block';</script>
+    <?php endif; ?>
+    
+    <?php if (isset($view_resident)): ?>
+        <script>document.getElementById('viewModal').style.display='block';</script>
+    <?php endif; ?>
 
     <script>
         /* ================= DATE & TIME ================= */
@@ -668,120 +707,6 @@ $conn->close();
                     : 'none';
             });
         });
-
-        /* ================= MODALS ================= */
-        function openAdd() {
-            document.getElementById('addModal').style.display = 'block';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        /* ================= ADD RESIDENT ================= */
-        document.getElementById('addForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            formData.append('action', 'add');
-
-            fetch('superadminResidents.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Failed to add resident');
-                    }
-                });
-        });
-
-        /* ================= VIEW RESIDENT ================= */
-        function viewResident(id) {
-            fetch(`superadminResidents.php?action=getDetails&residentId=${id}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.success) return;
-
-                    let html = '';
-                    for (const key in data.resident) {
-                        if (key !== 'resident_id') {
-                            html += `<p><strong>${key.replace(/_/g, ' ')}:</strong> ${data.resident[key]}</p>`;
-                        }
-                    }
-
-                    document.getElementById('viewBody').innerHTML = html;
-                    document.getElementById('viewModal').style.display = 'block';
-                });
-        }
-
-        /* ================= EDIT RESIDENT ================= */
-        function editResident(id) {
-            fetch(`superadminResidents.php?action=getDetails&residentId=${id}`)
-                .then(res => res.json())
-                .then(data => {
-                    const r = data.resident;
-
-                    document.getElementById('eid').value = r.resident_id;
-                    document.getElementById('efull').value = r.full_name;
-                    document.getElementById('edob').value = r.date_of_birth;
-                    document.getElementById('esex').value = r.sex;
-                    document.getElementById('ecivil').value = r.civil_status;
-                    document.getElementById('eaddr').value = r.address;
-                    document.getElementById('econtact').value = r.contact_number;
-
-                    document.getElementById('editModal').style.display = 'block';
-                });
-        }
-
-        document.getElementById('editForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            formData.append('action', 'edit');
-
-            fetch('superadminResidents.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Failed to update resident');
-                    }
-                });
-        });
-
-        /* ================= DELETE RESIDENT ================= */
-        function deleteResident(e, id) {
-            e.stopPropagation();
-
-            if (!confirm('Delete resident?')) return;
-
-            fetch('superadminResidents.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `action=delete&residentId=${id}`
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Failed to delete resident');
-                    }
-                });
-        }
-
-        /* ================= LOGOUT ================= */
-        function logout() {
-            location.href = 'superadminLogout.php';
-        }
     </script>
 
 </body>
