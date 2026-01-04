@@ -405,10 +405,15 @@
 
         .success-popup-content {
             background-color: #fff;
-            margin: 100px auto;
             padding: 20px;
+            border-radius: 8px;
+            width: 90%;
             max-width: 400px;
-            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
         }
 

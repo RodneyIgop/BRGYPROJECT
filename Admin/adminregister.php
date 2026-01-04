@@ -365,23 +365,6 @@
             z-index: 2500;
             left: 0;
             top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .success-popup-content {
-            background-color: #fff;
-            margin: 100px auto;
-            padding: 20px;
-            max-width: 400px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .success-popup-content h3 {
-            color: #014A7F;
-            margin-bottom: 10px;
         }
 
         .success-popup-btn {

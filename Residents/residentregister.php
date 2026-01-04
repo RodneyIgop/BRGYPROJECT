@@ -37,8 +37,15 @@ if (isset($_GET['success'])) {
             min-height: 100vh;
         }
 
-        a {
+        a.loginhere, a.back-home {
             text-decoration: none;
+            
+            color: #014A7F;
+            
+        }
+
+        a.loginhere:hover, a.back-home:hover {
+            text-decoration: underline;
         }
 
         /* ================== Navbar ================== */
@@ -158,6 +165,7 @@ if (isset($_GET['success'])) {
             border-radius: 8px;
             transition: background 0.3s;
             position: relative;
+            margin-bottom: 20px;
         }
 
         .register-box button.register:hover {
@@ -207,10 +215,15 @@ if (isset($_GET['success'])) {
 
         .success-popup-content {
             background-color: #fff;
-            margin: 100px auto;
             padding: 20px;
+            border-radius: 8px;
+            width: 90%;
             max-width: 400px;
-            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
         }
 
@@ -490,7 +503,8 @@ if (isset($_GET['success'])) {
 
             <p class="already-account">Already have an account?</p>
             <a href="residentlogin.php" class="loginhere">Login here</a>
-            <a href="../index.php" class="back-home">Back to Home</a>
+            <br>
+            <a href="../index.php" class="back-home">← Back to Home</a>
         </div>
     </section>
 
