@@ -64,7 +64,7 @@ if (!isset($_SESSION['superadmin_id'])) {
             <img src="../images/archive.png"> Archives
         </a>
 
-        <button onclick="logout()" style="margin-top:auto;">
+        <button onclick="showLogoutPopup()" style="margin-top:auto;">
             <img src="../images/logout.png"> Logout
         </button>
     </nav>
@@ -127,6 +127,53 @@ if (!isset($_SESSION['superadmin_id'])) {
     </div>
 </div>
     </div>
+
+    <!-- Logout Confirmation Popup -->
+    <div class="logout-overlay" id="logoutOverlay" onclick="closeLogoutPopup()"></div>
+    <div class="logout-popup" id="logoutPopup">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out?</p>
+        <div class="logout-popup-buttons">
+            <button class="logout-btn logout-btn-yes" onclick="confirmLogout()">Yes</button>
+            <button class="logout-btn logout-btn-no" onclick="closeLogoutPopup()">No</button>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutPopup() {
+            const overlay = document.getElementById('logoutOverlay');
+            const popup = document.getElementById('logoutPopup');
+            
+            overlay.classList.add('show');
+            popup.classList.add('show');
+            
+            // Prevent body scroll when popup is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogoutPopup() {
+            const overlay = document.getElementById('logoutOverlay');
+            const popup = document.getElementById('logoutPopup');
+            
+            overlay.classList.remove('show');
+            popup.classList.remove('show');
+            
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Redirect to superadmin login page (this will end the session)
+            window.location.href = 'superadminlogin.php?logout=true';
+        }
+
+        // Close popup on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLogoutPopup();
+            }
+        });
+    </script>
 
     <script src="superadminAdminAccs.js"></script>
 </body>

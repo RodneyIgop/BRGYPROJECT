@@ -27,7 +27,7 @@ if($row = $result->fetch_assoc()){
     if($password === $row['Password']){
         $_SESSION['resident_id'] = $row['UID'];
         $_SESSION['resident_name'] = $row['FirstName'].' '.$row['LastName'];
-        header('Location: ResidentsIndex.php');
+        header('Location: residentlogin.php?login_success=true');
         exit;
     }
 }

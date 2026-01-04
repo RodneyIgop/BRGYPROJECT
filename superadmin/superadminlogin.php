@@ -304,6 +304,70 @@ $registration_disabled = $superadmin_count >= 2;
             position: absolute;
             right: 0;
         }
+
+        /* ================== Success Popup ================== */
+        .success-popup {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+            z-index: 9999;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .success-popup.show {
+            top: 30px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-popup.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        .success-popup .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background 0.3s;
+            margin-left: 10px;
+        }
+
+        .success-popup .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .success-popup .icon {
+            font-size: 20px;
+            animation: checkmark 0.6s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(45deg); }
+            50% { transform: scale(1.2) rotate(45deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
     </style>
 
 </head>
@@ -384,18 +448,67 @@ $registration_disabled = $superadmin_count >= 2;
             </div>
         </div>
     </section>
-</body>
-<script>
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
 
-    navToggle.addEventListener('click', () => {
-        if (navLinks.style.display === 'flex') {
-            navLinks.style.display = 'none';
-        } else {
-            navLinks.style.display = 'flex';
+    <!-- Success Popup -->
+    <div id="successPopup" class="success-popup">
+        <span class="icon">✓</span>
+        <span class="message">Login Successful!</span>
+        <button class="close-btn" onclick="hidePopup()">×</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showSuccessPopup() {
+            const popup = document.getElementById('successPopup');
+            popup.classList.add('show');
+            popup.classList.remove('hide');
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                hidePopup();
+            }, 3000);
         }
-    });
-</script>
-<script src="./superadminlogin.js"></script>
+
+        function hidePopup() {
+            const popup = document.getElementById('successPopup');
+            popup.classList.add('hide');
+            popup.classList.remove('show');
+            
+            // Redirect after fade out animation
+            setTimeout(() => {
+                window.location.href = 'superadmindashboard.php';
+            }, 500);
+        }
+
+        // Check if login was successful and show popup
+        <?php if (isset($_GET['login_success']) && $_GET['login_success'] == 'true'): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(showSuccessPopup, 100);
+            });
+        <?php endif; ?>
+
+        // Check for error messages
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid'): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add error display logic here if needed
+            });
+        <?php endif; ?>
+    </script>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+            }
+        });
+    </script>
+    <script src="./superadminlogin.js"></script>
+</body>
 </html>

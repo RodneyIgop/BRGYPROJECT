@@ -20,11 +20,5 @@ document.addEventListener('DOMContentLoaded', () => {
       link.classList.add('active');
     }
   });
-
-  window.logout = function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-      window.location.href = 'adminLogin.php?logout=true';
-    }
-  };
 });
 

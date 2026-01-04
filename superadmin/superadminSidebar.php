@@ -124,6 +124,103 @@
     height: 1.4em;
     filter: brightness(0) invert(1);
 }
+
+/* ================== Logout Confirmation Popup ================== */
+.logout-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.logout-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.logout-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    text-align: center;
+    min-width: 320px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.logout-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.logout-popup h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.logout-popup p {
+    margin: 0 0 25px 0;
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.logout-popup-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.logout-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.logout-btn-yes {
+    background: #dc3545;
+    color: white;
+}
+
+.logout-btn-yes:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.logout-btn-no {
+    background: #6c757d;
+    color: white;
+}
+
+.logout-btn-no:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
 </style><!-- SIDEBAR (UNCHANGED STRUCTURE) -->
 <div class="sidebar">
     <div class="sidebar-logo">
@@ -178,8 +275,55 @@
             <img src="../images/archive.png"> Archives
         </a>
 
-        <button onclick="logout()" style="margin-top:auto;">
+        <button onclick="showLogoutPopup()" style="margin-top:auto;">
             <img src="../images/logout.png"> Logout
         </button>
     </nav>
 </div>
+
+<!-- Logout Confirmation Popup -->
+<div class="logout-overlay" id="logoutOverlay" onclick="closeLogoutPopup()"></div>
+<div class="logout-popup" id="logoutPopup">
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out?</p>
+    <div class="logout-popup-buttons">
+        <button class="logout-btn logout-btn-yes" onclick="confirmLogout()">Yes</button>
+        <button class="logout-btn logout-btn-no" onclick="closeLogoutPopup()">No</button>
+    </div>
+</div>
+
+<script>
+    function showLogoutPopup() {
+        const overlay = document.getElementById('logoutOverlay');
+        const popup = document.getElementById('logoutPopup');
+        
+        overlay.classList.add('show');
+        popup.classList.add('show');
+        
+        // Prevent body scroll when popup is open
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLogoutPopup() {
+        const overlay = document.getElementById('logoutOverlay');
+        const popup = document.getElementById('logoutPopup');
+        
+        overlay.classList.remove('show');
+        popup.classList.remove('show');
+        
+        // Restore body scroll
+        document.body.style.overflow = 'auto';
+    }
+
+    function confirmLogout() {
+        // Redirect to superadmin login page (this will end the session)
+        window.location.href = 'superadminlogin.php?logout=true';
+    }
+
+    // Close popup on Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeLogoutPopup();
+        }
+    });
+</script>

@@ -26,13 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ================= LOGOUT =================
-  window.logout = function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-      window.location.href = 'superadminLogin.php?logout=true';
-    }
-  }
-
   // ================= NOTIFICATIONS =================
   window.toggleNotifications = function toggleNotifications() {
     const dropdown = document.getElementById('notificationDropdown');

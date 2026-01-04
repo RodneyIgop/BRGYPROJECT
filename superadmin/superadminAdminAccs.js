@@ -1,5 +1,1 @@
-function logout() {
-            if(confirm('Are you sure you want to logout?')) {
-                window.location.href = 'superadminlogin.php?logout=true';
-            }
-        }
+// Old logout function removed - using modern popup system

@@ -1,7 +1,3 @@
-function logout(){
-    if(confirm('Logout?')) window.location.href='adminLogout.php';
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('residentsSearch');
     const ageInput = document.getElementById('residentsAgeFilter');

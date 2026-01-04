@@ -166,7 +166,7 @@ if ($isPreview || $isPrint) {
             <a href="adminAnnouncements.php" class="sidebar-link"> <img src="../images/marketing.png" alt=""> Announcements</a>
             <a href="adminMessages.php" class="sidebar-link"> <img src="../images/email.png" alt="">Messages</a>
             <a href="adminResidents.php" class="sidebar-link"> <img src="../images/residents.png" alt="residents"> Residents</a>
-            <button onclick="logout()" class="sidebar-link"> <img src="../images/logout.png" alt="">Logout</button>
+            <button onclick="showLogoutPopup()" class="sidebar-link"> <img src="../images/logout.png" alt="">Logout</button>
         </nav>
     </div>
 
@@ -279,6 +279,53 @@ if ($isPreview || $isPrint) {
 
         </div>
     </div>
+
+    <!-- Logout Confirmation Popup -->
+    <div class="logout-overlay" id="logoutOverlay" onclick="closeLogoutPopup()"></div>
+    <div class="logout-popup" id="logoutPopup">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out?</p>
+        <div class="logout-popup-buttons">
+            <button class="logout-btn logout-btn-yes" onclick="confirmLogout()">Yes</button>
+            <button class="logout-btn logout-btn-no" onclick="closeLogoutPopup()">No</button>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutPopup() {
+            const overlay = document.getElementById('logoutOverlay');
+            const popup = document.getElementById('logoutPopup');
+            
+            overlay.classList.add('show');
+            popup.classList.add('show');
+            
+            // Prevent body scroll when popup is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogoutPopup() {
+            const overlay = document.getElementById('logoutOverlay');
+            const popup = document.getElementById('logoutPopup');
+            
+            overlay.classList.remove('show');
+            popup.classList.remove('show');
+            
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Redirect to admin login page (this will end the session)
+            window.location.href = 'adminLogin.php';
+        }
+
+        // Close popup on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLogoutPopup();
+            }
+        });
+    </script>
 
     <script src="adminreleased.js"> </script>
 </body>

@@ -34,12 +34,6 @@ function closeVerificationModal() {
     document.getElementById('verificationModal').classList.remove('show');
 }
 
-function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-        window.location.href = 'adminLogin.php?logout=true';
-    }
-}
-
 // ---------- Profile picture feature ---------------
 document.addEventListener('DOMContentLoaded', () => {
     const img = document.querySelector('.profile-image img');

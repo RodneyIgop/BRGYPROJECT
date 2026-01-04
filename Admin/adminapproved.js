@@ -1,7 +1,3 @@
-function logout(){
-    if(confirm('Logout?')) window.location.href='adminLogout.php';
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('requestModal');
     const printModal = document.getElementById('printModal');

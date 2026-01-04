@@ -273,12 +273,6 @@ $fullname = trim($firstname . ' ' . $middlename . ' ' . $lastname . ' ' . $suffi
 		document.getElementById('verificationModal').classList.remove('show');
 	}
 	
-	function logout(){
-		if(confirm('Are you sure you want to logout?')){
-			window.location.href='superadminlogin.php?logout=true';
-		}
-	}
-	
 	// Handle edit profile form submission
 	document.getElementById('editProfileForm').addEventListener('submit', function(e) {
 		e.preventDefault();
@@ -324,13 +318,14 @@ $fullname = trim($firstname . ' ' . $middlename . ' ' . $lastname . ' ' . $suffi
 		const editModal = document.getElementById('editProfileModal');
 		const verifyModal = document.getElementById('verificationModal');
 		if (event.target == editModal) {
-			editModal.classList.remove('show');
+			closeEditModal();
 		}
 		if (event.target == verifyModal) {
-			verifyModal.classList.remove('show');
+			closeVerificationModal();
 		}
 	}
 	</script>
-	<script src="superadminprofile.js"></script>
+
+    <script src="superadminprofile.js"></script>
 </body>
 </html>
