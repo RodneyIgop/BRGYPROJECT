@@ -26,7 +26,8 @@ function viewRequest(button) {
         birthdate: button.dataset.birthdate || 'N/A',
         age: button.dataset.age || 'N/A',
         profilePicture: button.dataset.profilePicture || '../images/tao.png',
-        status: 'Pending'
+        status: 'Pending',
+        canApprove: button.dataset.canApprove === 'true'
     };
     
     // Populate modal with request data
@@ -52,6 +53,9 @@ function populateRequestModal(requestData) {
     document.getElementById('modalBirthdate').textContent = formatDate(requestData.birthdate) || 'N/A';
     document.getElementById('modalAge').textContent = requestData.age || 'N/A';
     document.getElementById('modalStatus').textContent = requestData.status;
+    
+    // Update accept button state based on validation
+    updateAcceptButton(requestData.canApprove);
 }
 
 function formatDate(dateString) {
@@ -91,6 +95,12 @@ window.onclick = function(event) {
 }
 
 function acceptRequest() {
+    // Check if approval is allowed
+    if (!currentRequestData.canApprove) {
+        alert('Cannot approve request: Name does not match any resident in the residents list.');
+        return false;
+    }
+    
     // Debug: Check current request data
     console.log('Current request data:', currentRequestData);
     console.log('Email from data:', currentRequestData.email);
@@ -141,5 +151,24 @@ function rejectRequest(requestId, event) {
             console.error('Error:', error);
             alert('An error occurred while rejecting the request');
         });
+    }
+}
+
+// Update accept button state based on validation
+function updateAcceptButton(canApprove) {
+    const acceptBtn = document.getElementById('acceptButton');
+    if (acceptBtn) {
+        acceptBtn.setAttribute('data-can-approve', canApprove ? 'true' : 'false');
+        if (canApprove === false) {
+            acceptBtn.style.opacity = '0.5';
+            acceptBtn.style.pointerEvents = 'none';
+            acceptBtn.style.cursor = 'not-allowed';
+            acceptBtn.title = 'Cannot approve: Name does not match any resident in the residents list';
+        } else {
+            acceptBtn.style.opacity = '1';
+            acceptBtn.style.pointerEvents = 'auto';
+            acceptBtn.style.cursor = 'pointer';
+            acceptBtn.title = '';
+        }
     }
 }

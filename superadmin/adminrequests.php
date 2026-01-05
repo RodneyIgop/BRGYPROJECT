@@ -213,8 +213,8 @@ try {
             <a href="superadminProfile.php"> <img src="../images/user.png" alt="">Profile</a>
             <details class="sidebar-dropdown">
                 <summary><img src="../images/list.png" alt="">Account Management <img src="../images/down.png" alt=""></summary>
-                <a href="superadminAdminAccs.php" class="submenu-link"> <img src="../images/addAdmin.png" alt="">Manage Admin Accounts</a>
                 <a href="superadminUserAccs.php" class="submenu-link"> <img src="../images/addUser.png" alt="">Manage Residents Accounts</a>
+                <a href="superadminAdminAccs.php" class="submenu-link"> <img src="../images/addAdmin.png" alt="">Manage Admin Accounts</a>
                 <a href="superadminAccounts.php" class="submenu-link"> <img src="../images/addUser.png" alt="">Manage Superadmin Accounts</a>
                 <!-- <a href="superadminUsers.php" class="submenu-link"> <img src="../images/pending.png" alt="">Block / Unblock Accounts</a> -->
             </details>
@@ -355,11 +355,7 @@ try {
                 </div>
             </div>
             <div class="modal-actions">
-                <a href="generateEmployeeID.php?requestId=<?php echo urlencode($request['adminID']); ?>&email=<?php echo urlencode($request['Email'] ?? ''); ?>&firstName=<?php echo urlencode($request['FirstName'] ?? ''); ?>&middleName=<?php echo urlencode($request['MiddleName'] ?? ''); ?>&lastName=<?php echo urlencode($request['LastName'] ?? ''); ?>&suffix=<?php echo urlencode($request['Suffix'] ?? ''); ?>" 
-                   class="action-btn accept-btn" 
-                   id="acceptButton"
-                   style="text-decoration: none; display: inline-block;"
-                   onclick="return validateApproval()">Accept</a>
+                <button type="button" class="action-btn accept-btn" id="acceptButton" onclick="acceptRequest()">Accept</button>
                 <button type="button" class="cancel-btn" onclick="closeRequestModal()">Cancel</button>
             </div>
         </div>
@@ -369,34 +365,5 @@ try {
     
     <!-- Bootstrap CSS for badges -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <script>
-    // Validation function to check if approval is allowed
-    function validateApproval() {
-        const acceptBtn = document.getElementById('acceptButton');
-        const canApprove = acceptBtn.getAttribute('data-can-approve');
-        
-        if (canApprove === 'false') {
-            alert('Cannot approve request: Name does not match any resident in the residents list.');
-            return false;
-        }
-        return true;
-    }
-    
-    // Update accept button when modal is opened
-    function updateAcceptButton(canApprove) {
-        const acceptBtn = document.getElementById('acceptButton');
-        if (acceptBtn) {
-            acceptBtn.setAttribute('data-can-approve', canApprove);
-            if (canApprove === 'false') {
-                acceptBtn.style.opacity = '0.5';
-                acceptBtn.style.pointerEvents = 'none';
-            } else {
-                acceptBtn.style.opacity = '1';
-                acceptBtn.style.pointerEvents = 'auto';
-            }
-        }
-    }
-    </script>
 </body>
 </html>

@@ -35,13 +35,14 @@ if (!isset($_SESSION['superadmin_id'])) {
                 <img src="../images/list.png"> Account Management
                 <img src="../images/down.png">
             </summary>
-            <a href="superadminAdminAccs.php" class="submenu-link">
-                <img src="../images/addAdmin.png"> Manage Admin Accounts
-            </a>
             <a href="superadminUserAccs.php" class="submenu-link">
                 <img src="../images/addUser.png"> Manage Residents Accounts
             </a>
-           
+            <a href="superadminAdminAccs.php" class="submenu-link">
+                <img src="../images/addAdmin.png"> Manage Admin Accounts
+            </a>
+            <a href="superadminAccounts.php" class="submenu-link"> 
+                <img src="../images/addUser.png" alt="">Manage Superadmin Accounts</a>
         </details>
 
         <!-- ACTIVITY LOGS -->

@@ -92,8 +92,8 @@ try {
             <a href="superadminProfile.php"> <img src="../images/user.png" alt="">Profile</a>
             <details class="sidebar-dropdown">
                 <summary><img src="../images/list.png" alt="">Account Management <img src="../images/down.png" alt=""></summary>
-                <a href="superadminAdminAccs.php" class="submenu-link"> <img src="../images/addAdmin.png" alt="">Manage Admin Accounts</a>
                 <a href="superadminUserAccs.php" class="submenu-link"> <img src="../images/addUser.png" alt="">Manage Residents Accounts</a>
+                <a href="superadminAdminAccs.php" class="submenu-link"> <img src="../images/addAdmin.png" alt="">Manage Admin Accounts</a>
                 <a href="superadminAccounts.php" class="submenu-link"> <img src="../images/addUser.png" alt="">Manage Superadmin Accounts</a>
                 <!-- <a href="superadminUsers.php" class="submenu-link"> <img src="../images/pending.png" alt="">Block / Unblock Accounts</a> -->
             </details>
