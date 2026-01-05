@@ -175,7 +175,7 @@ require_once 'ResidentsProfileQuery.php';
                 <li class="active"><a href="ResidentsProfile.php"><i class="fas fa-user"></i> Profile</a></li>
                 <li><a href="ResidentsRequestDocu.php"><i class="fas fa-file-alt"></i> Document Request</a></li>
                 <li><a href="residentstrackrequest.php"><i class="fas fa-list"></i> My Request</a></li>
-                <li><a href="ResidentsArchive.php"><i class="fas fa-archive"></i> Archive</a></li>
+                <li><a href="ResidentsArchive.php"><i class="fas fa-archive"></i> History</a></li>
                 <li><a href="residentlogin.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>

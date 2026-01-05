@@ -89,7 +89,7 @@ if (!$fullname) {
                 <li><a href="ResidentsProfile.php" aria-label="Profile"><i class="fas fa-user"></i> <span>Profile</span></a></li>
                 <li><a href="ResidentsRequestDocu.php" aria-label="Document Request"><i class="fas fa-file-alt"></i> <span>Document Request</span></a></li>
                 <li><a href="residentstrackrequest.php" aria-label="My Request"><i class="fas fa-list"></i> <span>My Request</span></a></li>
-                <li class="active"><a href="#" aria-label="Archive"><i class="fas fa-archive"></i> <span>Archive</span></a></li>
+                <li class="active"><a href="#" aria-label="Archive"><i class="fas fa-archive"></i> <span>History</span></a></li>
                 <li class="logout"><a href="residentlogin.php" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </nav>
@@ -99,7 +99,7 @@ if (!$fullname) {
         <!-- Main Content -->
         <div class="main-content">
             <div class="page-header">
-                <h1>Archive</h1>
+                <h1>History</h1>
                 <p class="page-description">View your cancelled and declined document requests</p>
             </div>
             

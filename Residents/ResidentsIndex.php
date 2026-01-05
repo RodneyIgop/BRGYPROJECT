@@ -145,42 +145,6 @@ $residentName = isset($_SESSION['resident_name']) ? $_SESSION['resident_name'] :
         font-size: 1.1em;
     }
 
-    /* Logout link at bottom */
-    /* .logout {
-        margin-top: auto;
-    }
-
-    .logout a {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 18px 25px;
-        color: #fff;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .logout a:hover {
-        background: #0d4070;
-    }
-
-    /* Icons specific styles */
-    /* .bi-house::before {
-        content: "\f3e5";
-    }
-
-    .bi-person::before {
-        content: "\f4e1";
-    }
-
-    .bi-file-earmark-text::before {
-        content: "\f31c";
-    }
-
-    .bi-card-checklist::before {
-        content: "\f2d9";
-    } */ */
-
     /* ================== Logout Confirmation Popup ================== */
     .logout-overlay {
         position: fixed;
@@ -302,7 +266,7 @@ $residentName = isset($_SESSION['resident_name']) ? $_SESSION['resident_name'] :
                 <li class="active"><a href="ResidentsRequestDocu.php"><i class="fas fa-file-alt"></i> Document
                         Request</a></li>
                 <li><a href="residentstrackrequest.php"><i class="fas fa-list"></i> My Request</a></li>
-                <li><a href="ResidentsArchive.php"><i class="fas fa-archive"></i> Archive</a></li>
+                <li><a href="ResidentsArchive.php"><i class="fas fa-archive"></i> History </a></li>
                 <li class="logout"><a href="#" onclick="showLogoutPopup(event)"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -387,9 +351,9 @@ $residentName = isset($_SESSION['resident_name']) ? $_SESSION['resident_name'] :
                 </div>
                 <div class="quick-card text-center">
                     <i class="bi bi-archive-fill" style="font-size:1.8rem;"></i>
-                    <h6>Archived</h6>
+                    <h6>History</h6>
                     <p>View canceled or declined requests</p>
-                    <a href="ResidentsArchive.php">View Archived <i class="bi bi-arrow-right"></i></a>
+                    <a href="ResidentsArchive.php">View History <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
 
