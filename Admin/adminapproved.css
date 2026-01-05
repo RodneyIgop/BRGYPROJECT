@@ -591,6 +591,58 @@ box-shadow:0 2px 5px rgba(0,0,0,0.1);
 .action-icon{
     position:relative;
     display:inline-block;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin: 0 4px;
+}
+
+/* View Button - Blue (Information/Viewing) */
+.view-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: 2px solid #2980b9;
+}
+
+.view-btn img {
+    filter: brightness(0) invert(1);
+}
+
+.view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9, #1f618d);
+}
+
+/* Print Button - Green (Positive Action/Printing) */
+.print-btn {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    border: 2px solid #229954;
+}
+
+.print-btn img {
+    filter: brightness(0) invert(1);
+}
+
+.print-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, #229954, #1e8449);
+}
+
+/* Reject Button - Red (Caution/Negative Action) */
+.reject-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    border: 2px solid #c0392b;
+}
+
+.reject-btn img {
+    filter: brightness(0) invert(1);
+}
+
+.reject-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #c0392b, #a93226);
 }
 
 .action-icon::after{

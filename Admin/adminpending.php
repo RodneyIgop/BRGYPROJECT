@@ -124,7 +124,7 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
                         echo '<td><span style="background:#ffc107;color:#000;padding:4px 10px;border-radius:12px;font-size:13px;">Pending</span></td>';
                         echo '<td>';
                         echo '<a href="#requestModal" class="action-icon view-btn" data-id="'.$row["id"].'" data-fullname="'.htmlspecialchars($row["fullname"],ENT_QUOTES).'" data-date="'.htmlspecialchars($row["date_requested"],ENT_QUOTES).'" data-doc="'.htmlspecialchars($row["document_type"],ENT_QUOTES).'" data-purpose="'.htmlspecialchars($row["purpose"],ENT_QUOTES).'" data-notes="'.htmlspecialchars($row["notes"] ?? '',ENT_QUOTES).'" data-address="'.htmlspecialchars($details['Address'],ENT_QUOTES).'" data-birthdate="'.htmlspecialchars($details['Birthdate'],ENT_QUOTES).'" data-age="'.htmlspecialchars($details['Age'],ENT_QUOTES).'" data-contact="'.htmlspecialchars($details['ContactNumber'],ENT_QUOTES).'" data-email="'.htmlspecialchars($details['email'],ENT_QUOTES).'" data-label="View file"><img src="../images/view.png" alt="view" style="width:28px;height:28px;"></a> ';
-                        echo '<a href="#" class="action-icon reject-btn" data-id="'.$row["id"].'" data-label="Reject"><img src="../images/reject.png" alt="reject" style="width:28px;height:28px; margin-left: 1em;"></a>';
+                        echo '<a href="#" class="action-icon reject-btn" data-id="'.$row["id"].'" data-label="Reject"><img src="../images/reject.png" alt="reject" style="width:28px;height:28px;"></a>';
                         echo '</td>';
                         echo '</tr>';
                     }
