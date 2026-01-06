@@ -175,17 +175,17 @@ error_log("DEBUG: Number of rows found: " . ($rows ? $rows->num_rows : 0));
 if ($rows && $rows->num_rows > 0) {
     while ($row = $rows->fetch_assoc()) {
         echo '<tr>';
-        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
+        echo '<td data-label="Full Name" style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
         $displayStatus = $row['status'];
         if($row['status']==='declined') $displayStatus = 'declined';
         elseif($row['status']==='cancelled') $displayStatus = 'cancelled';
         elseif($row['status']==='completed') $displayStatus = 'completed';
-        echo '<td style="vertical-align: middle; text-align: center;"><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
-        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['dateRequested']).'</td>';
-        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['document']).'</td>';
-        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['purpose'] ?? 'N/A').'</td>';
-        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['reason'] ?? 'N/A').'</td>';
-        echo '<td class="action-buttons" style="vertical-align: middle; text-align: center;">';
+        echo '<td data-label="Status" style="vertical-align: middle; text-align: center;"><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
+        echo '<td data-label="Date Requested" style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['dateRequested']).'</td>';
+        echo '<td data-label="Document Type" style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['document']).'</td>';
+        echo '<td data-label="Purpose" style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['purpose'] ?? 'N/A').'</td>';
+        echo '<td data-label="Reason" style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['reason'] ?? 'N/A').'</td>';
+        echo '<td class="action-buttons" data-label="Actions" style="vertical-align: middle; text-align: center;">';
         if(($row['status']==='declined' || $row['status']==='cancelled') && !empty($row['reason'])){
             echo '<button class="edit-btn reason-btn" data-reason="'.htmlspecialchars($row['reason'],ENT_QUOTES).'" data-id="'.htmlspecialchars($row['reqId']).'">View Reason</button>';
         }elseif($row['status']==='completed'){

@@ -728,58 +728,97 @@ tbody tr:last-child td {
         font-size: 0.9rem;
     }
     
+    /* Mobile Card Layout for Table */
     .table-responsive {
+        overflow: visible;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
     
     table {
-        min-width: 700px;
-    }
-    
-    th, td {
-        padding: 8px 10px;
-        font-size: 11px;
-    }
-    
-    th {
-        font-size: 10px;
-        letter-spacing: 0.3px;
-        white-space: nowrap;
-    }
-    
-    td {
-        max-width: 120px;
-        word-wrap: break-word;
-    }
-    
-    .status {
-        padding: 5px 8px;
-        font-size: 10px;
-        min-width: 60px;
-        max-width: 120px;
-        white-space: normal;
-        word-wrap: break-word;
-        border-radius: 15px;
-        line-height: 1.2;
-        text-align: center;
-        display: inline-block;
-    }
-    
-    .action-buttons {
-        gap: 4px;
-        flex-direction: column;
+        min-width: auto;
         width: 100%;
-        min-width: 120px;
+        border-collapse: collapse;
+    }
+    
+    thead {
+        display: none;
+    }
+    
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 0;
+        position: relative;
+    }
+    
+    tbody tr:hover {
+        background-color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+    
+    tbody tr td {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+        min-width: auto;
+        max-width: none;
+        vertical-align: middle;
+    }
+    
+    tbody tr td:last-child {
+        border-bottom: none;
         justify-content: center;
+        padding-top: 10px;
+    }
+    
+    /* Add labels before each data point */
+    tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #00386b;
+        font-size: 12px;
+        min-width: 100px;
+        margin-right: 10px;
+    }
+    
+    /* Status badge in cards */
+    .status {
+        padding: 6px 12px;
+        font-size: 11px;
+        min-width: 80px;
+        text-align: center;
+    }
+    
+    /* Action buttons in cards */
+    .action-buttons {
+        gap: 8px;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        min-height: auto;
     }
     
     .edit-btn, .cancel-btn {
-        width: 100%;
-        padding: 6px 8px;
-        font-size: 10px;
-        min-width: 50px;
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 80px;
         white-space: nowrap;
     }
 }
@@ -1301,136 +1340,102 @@ tbody tr:last-child td {
 }
 
 @media (max-width: 576px) {
-    .main-content {
-        padding: 20px 10px;
-    }
-    
+    /* Enhanced Mobile Card Layout */
     .table-responsive {
+        overflow: visible;
         border-radius: 6px;
         box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
     }
     
     table {
-        min-width: 600px;
-    }
-    
-    th, td {
-        padding: 6px 8px;
-        font-size: 10px;
-    }
-    
-    th {
-        font-size: 9px;
-        letter-spacing: 0.2px;
-        padding: 6px 8px;
-        white-space: nowrap;
-    }
-    
-    td {
-        max-width: 100px;
-        font-size: 9px;
-        word-wrap: break-word;
-        line-height: 1.3;
-    }
-    
-    .status {
-        padding: 4px 6px;
-        font-size: 9px;
-        min-width: 50px;
-        max-width: 100px;
-        white-space: normal;
-        word-wrap: break-word;
-        border-radius: 12px;
-        line-height: 1.2;
-        text-align: center;
-        display: inline-block;
-    }
-    
-    .action-buttons {
-        gap: 3px;
-        min-width: 100px;
-        flex-direction: column;
+        min-width: auto;
         width: 100%;
+        border-collapse: collapse;
+    }
+    
+    thead {
+        display: none;
+    }
+    
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-radius: 6px;
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 0;
+        position: relative;
+    }
+    
+    tbody tr:hover {
+        background-color: white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+        transition: all 0.3s ease;
+    }
+    
+    tbody tr td {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #f5f5f5;
+        font-size: 13px;
+        min-width: auto;
+        max-width: none;
+        vertical-align: middle;
+    }
+    
+    tbody tr td:last-child {
+        border-bottom: none;
         justify-content: center;
+        padding-top: 8px;
+    }
+    
+    /* Labels for mobile cards */
+    tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #00386b;
+        font-size: 11px;
+        min-width: 90px;
+        margin-right: 8px;
+    }
+    
+    /* Status badge in cards */
+    .status {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-width: 70px;
+        text-align: center;
+    }
+    
+    /* Action buttons in cards */
+    .action-buttons {
+        gap: 6px;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        min-height: auto;
     }
     
     .edit-btn, .cancel-btn {
-        padding: 5px 6px;
-        font-size: 9px;
-        min-width: 45px;
-        width: 100%;
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 70px;
         white-space: nowrap;
-        line-height: 1.2;
     }
     
-    .sidebar .logo {
-        padding: 10px;
-    }
-    
-    .page-header {
-        margin-top: 4rem;
-        margin-bottom: 15px;
-    }
-    
-    .page-description {
-        font-size: 0.85rem;
-    }
-    
-    .requests-table {
-        border-radius: 6px;
-        margin-top: 10px;
-    }
-    
-    .sidebar .logo h2 {
-        font-size: 0.8rem;
-    }
-    
-    .sidebar nav a {
-        padding: 10px 12px;
-        font-size: 0.8rem;
-        gap: 10px;
-    }
-    
-    .logout a {
-        padding: 10px 12px;
-        gap: 10px;
-    }
-    
-    .modal-content {
-        margin: 1% auto;
-        width: 98%;
-        max-width: 400px;
-        max-height: 98vh;
-        border-radius: 8px;
-    }
-    
-    .modal-header {
-        padding: 12px 15px;
-    }
-    
-    .modal-header h2 {
-        font-size: 1.2rem;
-    }
-    
-    .modal-body {
-        padding: 15px;
-    }
-    
-    .close-modal {
-        width: 32px;
-        height: 32px;
-        font-size: 1.2rem;
-    }
-    
-    .form-group label {
-        font-size: 0.85rem;
-    }
-    
-    .form-group select,
-    .form-group textarea {
-        padding: 10px 12px;
-        font-size: 0.9rem;
+    .main-content {
+        padding: 20px 10px;
     }
 }
 

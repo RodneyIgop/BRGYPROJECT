@@ -153,18 +153,18 @@ error_log("DEBUG: Number of rows found: " . ($rows ? $rows->num_rows : 0));
 if ($rows && $rows->num_rows > 0) {
     while ($row = $rows->fetch_assoc()) {
         echo '<tr>';
-        echo '<td>'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
+        echo '<td data-label="Full Name">'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
         $displayStatus = $row['status'];
         if($row['status']==='pending') $displayStatus = 'in process';
         elseif($row['status']==='approved' || $row['status']==='under_review') $displayStatus = 'approved and ready for pick up';
         elseif($row['status']==='completed') $displayStatus = 'completed';
         elseif($row['status']==='declined') $displayStatus = 'declined';
-        echo '<td><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
-        echo '<td>'.htmlspecialchars($row['dateRequested']).'</td>';
-        echo '<td>'.htmlspecialchars($row['document']).'</td>';
-        echo '<td>'.htmlspecialchars($row['purpose']).'</td>';
-        echo '<td>'.htmlspecialchars($row['notes'] ?? '').'</td>';
-        echo '<td class="action-buttons">';
+        echo '<td data-label="Status"><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
+        echo '<td data-label="Date Requested">'.htmlspecialchars($row['dateRequested']).'</td>';
+        echo '<td data-label="Document Type">'.htmlspecialchars($row['document']).'</td>';
+        echo '<td data-label="Purpose">'.htmlspecialchars($row['purpose']).'</td>';
+        echo '<td data-label="Notes">'.htmlspecialchars($row['notes'] ?? '').'</td>';
+        echo '<td class="action-buttons" data-label="Actions">';
         if($row['status']==='declined'){
             echo '<button class="edit-btn reason-btn" data-reason="'.htmlspecialchars($row['reason'],ENT_QUOTES).'" data-id="'.htmlspecialchars($row['reqId']).'">View Reason</button>';
         }elseif($row['status']==='pending'){
