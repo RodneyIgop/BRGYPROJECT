@@ -305,7 +305,6 @@ td {
                     <th>Role</th>
                     <th>Action</th>
                     <th>Description</th>
-                    <th>Page</th>
                     <th>Date & Time</th>
                     <th>Status</th>
                 </tr>
@@ -323,15 +322,8 @@ td {
                             <td>
                                 <?= !empty($log['description']) ? htmlspecialchars($log['description']) : '<em style="color: #999;">No description</em>' ?>
                             </td>
-                            <td>
-                                <?= !empty($log['page']) ? htmlspecialchars($log['page']) : '<em style="color: #999;">N/A</em>' ?>
-                            </td>
                             <td><?= date('M d, Y • h:i A', strtotime($log['created_at'])) ?></td>
-                            <td>
-                                <span class="status-badge <?= strtolower($log['status']) ?>">
-                                    <?= htmlspecialchars($log['status']) ?>
-                                </span>
-                            </td>
+                            <td><span class="status <?= strtolower($log['status']) ?>"><?= htmlspecialchars($log['status']) ?></span></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

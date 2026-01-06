@@ -21,6 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($password === (string)$row['Password']) {
             $_SESSION['superadmin_id'] = $row['id'];
             $_SESSION['superadmin_name'] = trim(($row['FirstName'] ?? '') . ' ' . ($row['LastName'] ?? ''));
+            $_SESSION['superadmin_role'] = 'Superadmin'; // Match database ENUM value
+            
+            // Debug logging
+            error_log("DEBUG LOGIN: superadmin_id = " . $_SESSION['superadmin_id']);
+            error_log("DEBUG LOGIN: superadmin_name = " . $_SESSION['superadmin_name']);
+            error_log("DEBUG LOGIN: superadmin_role = " . $_SESSION['superadmin_role']);
+            
             header('Location: superadminlogin.php?login_success=true');
             exit;
         }
@@ -36,6 +43,7 @@ if (!isset($_SESSION['superadmin_id'])) {
 }
 
 $superadmin_name = $_SESSION['superadmin_name'] ?? 'Super Admin';
+$superadmin_role = $_SESSION['superadmin_role'] ?? 'Superadmin'; // Match database ENUM value
 $current_date = date('l, F j, Y');
 $current_time = date('g:i A');
 

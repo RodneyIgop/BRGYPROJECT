@@ -1,5 +1,31 @@
 <?php
-session_start();
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display errors in output
+
+// Set a global error handler to catch any errors and return JSON
+set_error_handler(function($severity, $message, $file, $line) {
+    error_log("PHP Error: $message in $file on line $line");
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['success' => false, 'message' => 'Server error occurred']);
+    exit;
+});
+
+// Set exception handler
+set_exception_handler(function($exception) {
+    error_log("Uncaught exception: " . $exception->getMessage());
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['success' => false, 'message' => 'Server error occurred']);
+    exit;
+});
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['superadmin_id'])) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
@@ -11,6 +37,7 @@ require_once '../Connection/Conn.php';
 require_once '../Connection/PHPMailer/src/Exception.php';
 require_once '../Connection/PHPMailer/src/PHPMailer.php';
 require_once '../Connection/PHPMailer/src/SMTP.php';
+require_once '../Connection/log_activity.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -21,9 +48,10 @@ use PHPMailer\PHPMailer\Exception;
  * @param string $fullName Recipient full name
  * @param string $requestType Type of request (admin/resident)
  * @param string $requestId Request ID
+ * @param string $rejectionReason Reason for rejection
  * @return bool True if email sent successfully, false otherwise
  */
-function sendRejectionEmail($email, $fullName, $requestType, $requestId) {
+function sendRejectionEmail($email, $fullName, $requestType, $requestId, $rejectionReason = '') {
     $mail = new PHPMailer(true);
     
     try {
@@ -45,6 +73,7 @@ function sendRejectionEmail($email, $fullName, $requestType, $requestId) {
         $mail->Subject = 'Barangay New Era - Account Request Rejected';
         
         $accountType = $requestType === 'admin' ? 'Admin Account' : 'Resident Account';
+        $reasonText = $rejectionReason ? htmlspecialchars($rejectionReason) : 'Name does not match any record in our official residents list';
         
         $mail->Body = '
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -61,7 +90,7 @@ function sendRejectionEmail($email, $fullName, $requestType, $requestId) {
                 
                 <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 20px; margin: 20px 0;">
                     <h4 style="color: #721c24; margin: 0 0 10px 0;">Reason for Rejection:</h4>
-                    <p style="color: #721c24; margin: 0;">Your name does not match any record in our official residents list.</p>
+                    <p style="color: #721c24; margin: 0;">' . $reasonText . '</p>
                 </div>
                 
                 <p><strong>Request Details:</strong></p>
@@ -87,7 +116,7 @@ function sendRejectionEmail($email, $fullName, $requestType, $requestId) {
             </div>
         ';
 
-        $mail->AltBody = 'Your ' . strtolower($accountType) . ' request (ID: ' . $requestId . ') has been rejected because your name does not match any record in our residents list. If you believe this is an error, please visit the Barangay New Era office with your valid identification documents.';
+        $mail->AltBody = 'Your ' . strtolower($accountType) . ' request (ID: ' . $requestId . ') has been rejected. Reason: ' . $reasonText . '. If you believe this is an error, please visit the Barangay New Era office with your valid identification documents.';
 
         $mail->send();
         return true;
@@ -102,6 +131,7 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
     $requestId = $_POST['requestId'];
+    $rejectionReason = $_POST['rejectionReason'] ?? 'Name does not match any record in our official residents list';
     $rejectedBy = $_SESSION['superadmin_name'] ?? 'Super Admin';
     
     try {
@@ -121,11 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
             
             // Send rejection email
             $fullName = trim($requestDetails['firstname'] . ' ' . $requestDetails['middlename'] . ' ' . $requestDetails['lastname'] . ' ' . $requestDetails['suffix']);
-            $emailSent = sendRejectionEmail($requestDetails['email'], $fullName, 'admin', $requestId);
+            $emailSent = sendRejectionEmail($requestDetails['email'], $fullName, 'admin', $requestId, $rejectionReason);
             
             // Insert into rejected_admin_requests table
-            $insertStmt = $conn->prepare("INSERT INTO rejected_admin_requests (RequestID, lastname, firstname, middlename, suffix, birthdate, age, email, contactnumber, requestDate, rejectionDate, rejected_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
-            $insertStmt->bind_param("sssssisssss", 
+            $insertStmt = $conn->prepare("INSERT INTO rejected_admin_requests (RequestID, lastname, firstname, middlename, suffix, birthdate, age, email, contactnumber, requestDate, rejectionDate, rejected_by, rejection_reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
+            $insertStmt->bind_param("sssssissssss", 
                 $requestDetails['RequestID'],
                 $requestDetails['lastname'],
                 $requestDetails['firstname'],
@@ -136,7 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
                 $requestDetails['email'],
                 $requestDetails['contactnumber'],
                 $requestDetails['requestDate'],
-                $rejectedBy
+                $rejectedBy,
+                $rejectionReason
             );
             $insertStmt->execute();
             $insertStmt->close();
@@ -146,6 +177,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
             $deleteStmt->bind_param("s", $requestId);
             $deleteStmt->execute();
             $deleteStmt->close();
+            
+            // Log the rejection activity
+            $superadminId = $_SESSION['superadmin_id'] ?? 'UNKNOWN_ID';
+            $superadminName = $_SESSION['superadmin_name'] ?? 'UNKNOWN_NAME';
+            $superadminRole = $_SESSION['superadmin_role'] ?? 'Superadmin'; // Use correct ENUM value
+            
+            // Debug logging
+            error_log("DEBUG: superadminId = " . $superadminId);
+            error_log("DEBUG: superadminName = " . $superadminName);
+            error_log("DEBUG: superadminRole = " . $superadminRole);
+            
+            $description = "Rejected admin account request for {$fullName} (Request ID: {$requestId}). Reason: {$rejectionReason}";
+            $logResult = logActivity($conn, $superadminId, $superadminName, $superadminRole, ACTION_REJECT_REQUEST, $description, 'adminrequests.php', 'Successful');
+            error_log("DEBUG: logActivity result = " . ($logResult ? 'SUCCESS' : 'FAILED'));
             
         } else {
             // Check if it's a resident request
@@ -162,11 +207,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
                 
                 // Send rejection email
                 $fullName = trim($residentDetails['FirstName'] . ' ' . $residentDetails['MiddleName'] . ' ' . $residentDetails['LastName'] . ' ' . $residentDetails['Suffix']);
-                $emailSent = sendRejectionEmail($residentDetails['email'], $fullName, 'resident', $requestId);
+                $emailSent = sendRejectionEmail($residentDetails['email'], $fullName, 'resident', $requestId, $rejectionReason);
                 
                 // Insert into rejected_resident_requests table
-                $insertStmt = $conn->prepare("INSERT INTO rejected_resident_requests (RequestID, lastname, firstname, middlename, suffix, birthdate, age, email, contactnumber, requestDate, rejectionDate, rejected_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
-                $insertStmt->bind_param("sssssisssss", 
+                $insertStmt = $conn->prepare("INSERT INTO rejected_resident_requests (RequestID, lastname, firstname, middlename, suffix, birthdate, age, email, contactnumber, requestDate, rejectionDate, rejected_by, rejection_reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
+                $insertStmt->bind_param("sssssissssss", 
                     $residentDetails['RequestID'],
                     $residentDetails['LastName'],
                     $residentDetails['FirstName'],
@@ -177,7 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
                     $residentDetails['email'],
                     $residentDetails['ContactNumber'],
                     $residentDetails['dateRequested'],
-                    $rejectedBy
+                    $rejectedBy,
+                    $rejectionReason
                 );
                 $insertStmt->execute();
                 $insertStmt->close();
@@ -187,6 +233,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestId'])) {
                 $deleteStmt->bind_param("s", $requestId);
                 $deleteStmt->execute();
                 $deleteStmt->close();
+                
+                // Log the rejection activity
+                $superadminId = $_SESSION['superadmin_id'] ?? 'UNKNOWN_ID';
+                $superadminName = $_SESSION['superadmin_name'] ?? 'UNKNOWN_NAME';
+                $superadminRole = $_SESSION['superadmin_role'] ?? 'Superadmin'; // Use correct ENUM value
+                
+                // Debug logging
+                error_log("DEBUG RESIDENT: superadminId = " . $superadminId);
+                error_log("DEBUG RESIDENT: superadminName = " . $superadminName);
+                error_log("DEBUG RESIDENT: superadminRole = " . $superadminRole);
+                
+                $description = "Rejected resident account request for {$fullName} (Request ID: {$requestId}). Reason: {$rejectionReason}";
+                $logResult = logActivity($conn, $superadminId, $superadminName, $superadminRole, ACTION_REJECT_REQUEST, $description, 'residentrequest.php', 'Successful');
+                error_log("DEBUG RESIDENT: logActivity result = " . ($logResult ? 'SUCCESS' : 'FAILED'));
                 
             } else {
                 $residentCheckStmt->close();

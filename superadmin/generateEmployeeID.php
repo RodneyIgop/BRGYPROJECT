@@ -9,6 +9,7 @@ if (!isset($_SESSION['superadmin_id'])) {
 require_once '../Connection/PHPMailer/src/Exception.php';
 require_once '../Connection/PHPMailer/src/PHPMailer.php';
 require_once '../Connection/PHPMailer/src/SMTP.php';
+require_once '../Connection/log_activity.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -134,6 +135,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send'])) {
             $stmt->close();
             
             error_log("Deleted from adminrequests");
+            
+            // Log the approval activity
+            $fullName = trim($firstName . ' ' . $middleName . ' ' . $lastName . ' ' . $suffix);
+            $superadminId = $_SESSION['superadmin_id'] ?? 'UNKNOWN_ID';
+            $superadminName = $_SESSION['superadmin_name'] ?? 'UNKNOWN_NAME';
+            $superadminRole = $_SESSION['superadmin_role'] ?? 'Superadmin'; // Use correct ENUM value
+            
+            // Debug logging
+            error_log("DEBUG ADMIN APPROVAL: superadminId = " . $superadminId);
+            error_log("DEBUG ADMIN APPROVAL: superadminName = " . $superadminName);
+            error_log("DEBUG ADMIN APPROVAL: superadminRole = " . $superadminRole);
+            
+            $description = "Approved admin account request for {$fullName} (Request ID: {$requestId}). Generated Employee ID: {$employeeID}";
+            $logResult = logActivity($db, $superadminId, $superadminName, $superadminRole, ACTION_APPROVE_REQUEST, $description, 'adminrequests.php', 'Successful');
+            error_log("DEBUG ADMIN APPROVAL: logActivity result = " . ($logResult ? 'SUCCESS' : 'FAILED'));
             
             // Clear password from session
             unset($_SESSION['pending_admin_password']);

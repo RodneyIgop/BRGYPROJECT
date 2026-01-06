@@ -9,6 +9,7 @@ if (!isset($_SESSION['superadmin_id'])) {
 require_once '../Connection/PHPMailer/src/Exception.php';
 require_once '../Connection/PHPMailer/src/PHPMailer.php';
 require_once '../Connection/PHPMailer/src/SMTP.php';
+require_once '../Connection/log_activity.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -138,6 +139,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send'])) {
             $stmt->close();
             
             error_log("Deleted from userrequest");
+            
+            // Log the approval activity
+            $fullName = trim($firstName . ' ' . $middleName . ' ' . $lastName . ' ' . $suffix);
+            $superadminId = $_SESSION['superadmin_id'] ?? 'UNKNOWN_ID';
+            $superadminName = $_SESSION['superadmin_name'] ?? 'UNKNOWN_NAME';
+            $superadminRole = $_SESSION['superadmin_role'] ?? 'Superadmin'; // Use correct ENUM value
+            
+            // Debug logging
+            error_log("DEBUG RESIDENT APPROVAL: superadminId = " . $superadminId);
+            error_log("DEBUG RESIDENT APPROVAL: superadminName = " . $superadminName);
+            error_log("DEBUG RESIDENT APPROVAL: superadminRole = " . $superadminRole);
+            
+            $description = "Approved resident account request for {$fullName} (Request ID: {$requestId}). Generated User ID: {$userID}";
+            $logResult = logActivity($db, $superadminId, $superadminName, $superadminRole, ACTION_APPROVE_REQUEST, $description, 'residentrequest.php', 'Successful');
+            error_log("DEBUG RESIDENT APPROVAL: logActivity result = " . ($logResult ? 'SUCCESS' : 'FAILED'));
             
             $successMessage = "User ID has been sent to $recipientEmail";
             error_log("Success message set: " . $successMessage);

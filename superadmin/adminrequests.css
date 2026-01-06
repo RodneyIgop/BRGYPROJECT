@@ -104,10 +104,157 @@ body {
     margin-bottom: 40px;
 }
 
+.page-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
 .page-header h1 {
     font-size: 36px;
     color: #333;
     font-weight: bold;
+    margin: 0;
+}
+
+/* ================= REFRESH CONTROLS STYLES ================= */
+.refresh-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.auto-refresh-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #014A7F;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.refresh-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+#refreshStatus.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+#refreshStatus.status-paused {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.refresh-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #014A7F;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.refresh-spinner.spinning {
+    opacity: 1;
+    animation: spin 1s linear infinite;
+}
+
+.manual-refresh-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.manual-refresh-btn:hover {
+    border-color: #014A7F;
+    color: #014A7F;
+    background-color: rgba(1, 74, 127, 0.1);
+}
+
+.manual-refresh-btn:active {
+    transform: rotate(180deg);
+}
+
+/* Responsive refresh controls */
+@media (max-width: 768px) {
+    .page-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .refresh-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .page-header h1 {
+        font-size: 28px;
+    }
 }
 
 /* PROFILE CARD */
@@ -1132,5 +1279,307 @@ body {
     
     .generate-btn, .send-btn {
         width: 100%;
+    }
+}
+
+/* ================= REJECTION REASON MODAL STYLES ================= */
+.rejection-reasons {
+    margin: 20px 0;
+}
+
+.reason-option {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.reason-option:hover {
+    border-color: #014A7F;
+    background-color: #f8f9fa;
+}
+
+.reason-option input[type="radio"] {
+    display: none;
+}
+
+.reason-option .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    margin-right: 12px;
+    margin-top: 2px;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.reason-option input[type="radio"]:checked + .checkmark {
+    border-color: #014A7F;
+    background-color: #014A7F;
+}
+
+.reason-option input[type="radio"]:checked + .checkmark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.reason-option span {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.reason-option input[type="radio"]:checked ~ span {
+    color: #014A7F;
+    font-weight: 600;
+}
+
+#otherReasonContainer textarea {
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 0.3s ease;
+}
+
+#otherReasonContainer textarea:focus {
+    outline: none;
+    border-color: #014A7F;
+    box-shadow: 0 0 5px rgba(1, 74, 127, 0.2);
+}
+
+#confirmRejectBtn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#confirmRejectBtn:disabled:hover {
+    background-color: #6c757d;
+}
+
+/* Responsive design for rejection modal */
+@media (max-width: 768px) {
+    .rejection-reasons {
+        margin: 15px 0;
+    }
+    
+    .reason-option {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .reason-option .checkmark {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+    }
+    
+    .reason-option input[type="radio"]:checked + .checkmark::after {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .reason-option span {
+        font-size: 13px;
+    }
+}
+
+/* ================= PROCESSING OVERLAY STYLES ================= */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.processing-overlay.show {
+    display: flex;
+}
+
+.processing-content {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+}
+
+.processing-content p {
+    margin: 20px 0 0 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Spinner Animation */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #014A7F;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================= NOTIFICATION STYLES ================= */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    z-index: 10000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    display: none;
+}
+
+.notification.show {
+    display: block;
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    background: white;
+    position: relative;
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    margin-right: 12px;
+    width: 24px;
+    height: 24px;
+}
+
+.notification-message {
+    flex: 1;
+}
+
+.notification-message h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.notification-message p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #666;
+}
+
+.notification-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    color: #666;
+}
+
+.notification-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Success Notification */
+.success-notification .notification-content {
+    border-left: 4px solid #28a745;
+}
+
+.success-notification .notification-icon {
+    color: #28a745;
+}
+
+.success-notification .notification-message h4 {
+    color: #28a745;
+}
+
+/* Error Notification */
+.error-notification .notification-content {
+    border-left: 4px solid #dc3545;
+}
+
+.error-notification .notification-icon {
+    color: #dc3545;
+}
+
+.error-notification .notification-message h4 {
+    color: #dc3545;
+}
+
+/* Responsive notifications */
+@media (max-width: 768px) {
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .notification-content {
+        padding: 14px;
+    }
+    
+    .notification-message h4 {
+        font-size: 15px;
+    }
+    
+    .notification-message p {
+        font-size: 13px;
+    }
+    
+    .processing-content {
+        padding: 30px;
+        min-width: 250px;
+        margin: 20px;
+    }
+    
+    .processing-content p {
+        font-size: 15px;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
     }
 }

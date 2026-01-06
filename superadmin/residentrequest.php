@@ -223,7 +223,19 @@ try {
 
     <div class="main-content">
         <div class="page-header">
-            <h1>Resident Requests</h1>
+            <div class="page-header-content">
+                <h1>Resident Requests</h1>
+                <div class="refresh-controls">
+                    <button class="manual-refresh-btn" onclick="manualRefresh()" title="Refresh Table">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="container">
@@ -299,7 +311,7 @@ try {
                                                 data-can-approve="<?php echo $canApprove ? 'true' : 'false'; ?>"
                                                 onclick="viewRequest(this)">View</button>
                                            
-                                            <button class="action-btn reject-btn" onclick="rejectRequest('<?php echo htmlspecialchars($request['RequestID']); ?>', this)">Reject</button>
+                                            <button class="action-btn reject-btn" onclick="rejectRequest('<?php echo htmlspecialchars($request['RequestID']); ?>', event)">Reject</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -363,6 +375,82 @@ try {
                 <button type="button" class="action-btn accept-btn" id="acceptButton" onclick="acceptRequest()">Accept</button>
                 <button type="button" class="cancel-btn" onclick="closeRequestModal()">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Rejection Reason Modal -->
+    <div id="rejectionReasonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reject Resident Request</h2>
+                <span class="close" onclick="closeRejectionModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Please select a reason for rejecting this resident request:</p>
+                <div class="rejection-reasons">
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Name does not match any record in our official residents list">
+                        <span class="checkmark"></span>
+                        Name does not match any record in our official residents list
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Invalid identification documents provided">
+                        <span class="checkmark"></span>
+                        Invalid identification documents provided
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Duplicate account request detected">
+                        <span class="checkmark"></span>
+                        Duplicate account request detected
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Information provided is incomplete or inaccurate">
+                        <span class="checkmark"></span>
+                        Information provided is incomplete or inaccurate
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Applicant is not a resident of Barangay New Era">
+                        <span class="checkmark"></span>
+                        Applicant is not a resident of Barangay New Era
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="rejectionReason" value="Other">
+                        <span class="checkmark"></span>
+                        Other (please specify)
+                    </label>
+                    <div id="otherReasonContainer" style="display: none; margin-top: 15px;">
+                        <textarea id="otherReasonText" placeholder="Please specify the reason..." rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="action-btn reject-btn" onclick="confirmReject()" id="confirmRejectBtn" disabled>Confirm Rejection</button>
+                <button type="button" class="cancel-btn" onclick="closeRejectionModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Overlay -->
+    <div id="processingOverlay" class="processing-overlay">
+        <div class="processing-content">
+            <div class="processing-spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="successNotification" class="notification success-notification">
+        <div class="notification-content">
+            <div class="notification-icon">✓</div>
+            <div class="notification-message" id="successMessage">Operation completed successfully!</div>
+        </div>
+    </div>
+
+    <!-- Error Notification -->
+    <div id="errorNotification" class="notification error-notification">
+        <div class="notification-content">
+            <div class="notification-icon">✕</div>
+            <div class="notification-message" id="errorMessage">An error occurred!</div>
         </div>
     </div>
 

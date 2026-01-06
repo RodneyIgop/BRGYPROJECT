@@ -1,5 +1,9 @@
 // Store request data for modal
 let currentRequestData = {};
+let currentRejectionRequestId = null;
+
+// Refresh variables
+let isRefreshing = false;
 
 function logout() {
     if(confirm('Are you sure you want to logout?')) {
@@ -109,11 +113,7 @@ function acceptRequest() {
         return false;
     }
     
-    // Debug: Check current request data
-    console.log('Current request data:', currentRequestData);
-    console.log('Email from data:', currentRequestData.email);
-    
-    // Redirect to generate resident ID page with request data
+    // Redirect directly to generate UID page with request data
     const params = new URLSearchParams({
         requestId: currentRequestData.requestId,
         email: currentRequestData.email,
@@ -124,43 +124,98 @@ function acceptRequest() {
         censusNumber: currentRequestData.censusNumber
     });
     
-    console.log('Generated params:', params.toString());
     window.location.href = `generateUID.php?${params.toString()}`;
 }
 
-function rejectRequest(requestId, button) {
-    if(confirm('Are you sure you want to reject this resident request: ' + requestId + '?')) {
-        // Send AJAX request to reject the request
-        fetch('reject_request.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'requestId=' + encodeURIComponent(requestId)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                // Remove the row from the table
-                const row = button.closest('tr');
-                if (row) {
-                    row.remove();
-                }
-                // Check if there are no more requests
-                const tbody = document.querySelector('.admin-table tbody');
-                if (tbody && tbody.children.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No resident requests found.</td></tr>';
-                }
-            } else {
-                alert('Error rejecting request: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while rejecting the request');
-        });
+function rejectRequest(requestId, event) {
+    currentRejectionRequestId = requestId;
+    openRejectionModal();
+}
+
+function openRejectionModal() {
+    const modal = document.getElementById('rejectionReasonModal');
+    modal.classList.add('show');
+    
+    // Reset form
+    const radios = document.querySelectorAll('input[name="rejectionReason"]');
+    radios.forEach(radio => radio.checked = false);
+    document.getElementById('otherReasonContainer').style.display = 'none';
+    document.getElementById('otherReasonText').value = '';
+    document.getElementById('confirmRejectBtn').disabled = true;
+}
+
+function closeRejectionModal() {
+    const modal = document.getElementById('rejectionReasonModal');
+    modal.classList.remove('show');
+    currentRejectionRequestId = null;
+}
+
+function confirmReject() {
+    console.log('confirmReject() called');
+    console.log('currentRejectionRequestId:', currentRejectionRequestId);
+    
+    if (!currentRejectionRequestId) return;
+    
+    const selectedReason = document.querySelector('input[name="rejectionReason"]:checked');
+    console.log('selectedReason:', selectedReason);
+    
+    if (!selectedReason) {
+        console.log('No reason selected, showing error');
+        showErrorNotification('Please select a reason for rejection');
+        return;
     }
+    
+    let rejectionReason = selectedReason.value;
+    console.log('rejectionReason:', rejectionReason);
+    
+    if (rejectionReason === 'Other') {
+        const otherText = document.getElementById('otherReasonText').value.trim();
+        console.log('otherText:', otherText);
+        if (!otherText) {
+            console.log('Other selected but no text, showing error');
+            showErrorNotification('Please specify the reason for rejection');
+            return;
+        }
+        rejectionReason = otherText;
+    }
+    
+    console.log('About to show processing overlay');
+    // Show processing overlay
+    showProcessingOverlay();
+    
+    // Create and send AJAX request with rejection reason
+    const formData = new FormData();
+    formData.append('requestId', currentRejectionRequestId);
+    formData.append('rejectionReason', rejectionReason);
+    
+    console.log('Sending AJAX request to reject_request.php');
+    fetch('reject_request.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Response received:', response);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Data received:', data);
+        hideProcessingOverlay();
+        if (data.success) {
+            console.log('Request rejected successfully');
+            closeRejectionModal();
+            showSuccessNotification(data.message);
+            // Refresh table after successful rejection
+            refreshTable();
+        } else {
+            console.log('Request failed:', data.message);
+            showErrorNotification(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        hideProcessingOverlay();
+        showErrorNotification('An error occurred while rejecting the request');
+    });
 }
 
 // Update accept button state based on validation
@@ -181,3 +236,197 @@ function updateAcceptButton(canApprove) {
         }
     }
 }
+
+// Processing overlay functions
+function showProcessingOverlay() {
+    console.log('showProcessingOverlay() called');
+    const overlay = document.getElementById('processingOverlay');
+    console.log('overlay element:', overlay);
+    if (overlay) {
+        overlay.classList.add('show');
+        console.log('Added show class to overlay');
+    } else {
+        console.error('Processing overlay element not found!');
+    }
+}
+
+function hideProcessingOverlay() {
+    console.log('hideProcessingOverlay() called');
+    const overlay = document.getElementById('processingOverlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        console.log('Removed show class from overlay');
+    } else {
+        console.error('Processing overlay element not found!');
+    }
+}
+
+// Success notification functions
+function showSuccessNotification(message) {
+    const notification = document.getElementById('successNotification');
+    const messageElement = document.getElementById('successMessage');
+    messageElement.textContent = message;
+    notification.classList.add('show');
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        hideSuccessNotification();
+    }, 5000);
+}
+
+function hideSuccessNotification() {
+    const notification = document.getElementById('successNotification');
+    notification.classList.remove('show');
+}
+
+// Error notification functions
+function showErrorNotification(message) {
+    const notification = document.getElementById('errorNotification');
+    const messageElement = document.getElementById('errorMessage');
+    messageElement.textContent = message;
+    notification.classList.add('show');
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        hideErrorNotification();
+    }, 5000);
+}
+
+function hideErrorNotification() {
+    const notification = document.getElementById('errorNotification');
+    notification.classList.remove('show');
+}
+
+// Manual refresh function
+function manualRefresh() {
+    if (!isRefreshing) {
+        refreshTable();
+    }
+}
+
+function refreshTable() {
+    if (isRefreshing) return;
+    
+    isRefreshing = true;
+    
+    fetch('refresh_resident_requests.php', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        isRefreshing = false;
+        
+        if (data.success) {
+            updateTable(data.requests);
+            showSuccessNotification(`Table refreshed - ${data.count} requests found`);
+        } else {
+            showErrorNotification('Failed to refresh table: ' + data.message);
+        }
+    })
+    .catch(error => {
+        isRefreshing = false;
+        console.error('Error refreshing table:', error);
+        showErrorNotification('An error occurred while refreshing the table');
+    });
+}
+
+function updateTable(requests) {
+    const tbody = document.querySelector('.admin-table tbody');
+    
+    if (!requests || requests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No resident requests found.</td></tr>';
+        return;
+    }
+    
+    let tableHTML = '';
+    requests.forEach(request => {
+        const validationBadge = request.validationClass === 'success' 
+            ? '<span class="badge bg-success">✓ match in the residents list</span>'
+            : '<span class="badge bg-danger">❌ doesnt match any in the residents list</span>';
+        
+        tableHTML += `
+            <tr>
+                <td>${htmlspecialchars(request.requestId)}</td>
+                <td>${htmlspecialchars(request.fullName)}</td>
+                <td>${validationBadge}</td>
+                <td>${htmlspecialchars(request.CensusNumber)}</td>
+                <td>${htmlspecialchars(request.Email)}</td>
+                <td>${htmlspecialchars(request.ContactNumber)}</td>
+                <td>${htmlspecialchars(request.dateRequested)}</td>
+                <td>
+                    <button class="action-btn view-btn" 
+                        data-request-id="${htmlspecialchars(request.requestId)}"
+                        data-census-number="${htmlspecialchars(request.CensusNumber)}"
+                        data-first-name="${htmlspecialchars(request.FirstName)}"
+                        data-middle-name="${htmlspecialchars(request.MiddleName)}"
+                        data-last-name="${htmlspecialchars(request.LastName)}"
+                        data-suffix="${htmlspecialchars(request.Suffix)}"
+                        data-email="${htmlspecialchars(request.Email)}"
+                        data-contact-number="${htmlspecialchars(request.ContactNumber)}"
+                        data-address="${htmlspecialchars(request.Address)}"
+                        data-birthdate="${htmlspecialchars(request.birthdate)}"
+                        data-age="${htmlspecialchars(request.age)}"
+                        data-profile-picture="${htmlspecialchars(request.profile_picture)}"
+                        data-request-date="${htmlspecialchars(request.dateRequested)}"
+                        data-can-approve="${request.canApprove ? 'true' : 'false'}"
+                        onclick="viewRequest(this)">View</button>
+                   
+                    <button class="action-btn reject-btn" onclick="rejectRequest('${htmlspecialchars(request.requestId)}', this)">Reject</button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = tableHTML;
+}
+
+// Helper function for HTML escaping
+function htmlspecialchars(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// Add event listeners for rejection reason radio buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Radio button change event
+    const radioButtons = document.querySelectorAll('input[name="rejectionReason"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const confirmBtn = document.getElementById('confirmRejectBtn');
+            const otherContainer = document.getElementById('otherReasonContainer');
+            
+            if (this.value === 'Other') {
+                otherContainer.style.display = 'block';
+                confirmBtn.disabled = true; // Disable until user types something
+            } else {
+                otherContainer.style.display = 'none';
+                confirmBtn.disabled = false;
+            }
+        });
+    });
+    
+    // Other reason text field input event
+    const otherReasonText = document.getElementById('otherReasonText');
+    if (otherReasonText) {
+        otherReasonText.addEventListener('input', function() {
+            const confirmBtn = document.getElementById('confirmRejectBtn');
+            const isOtherSelected = document.querySelector('input[name="rejectionReason"][value="Other"]:checked');
+            
+            if (isOtherSelected) {
+                confirmBtn.disabled = this.value.trim() === '';
+            }
+        });
+    }
+    
+    // Close rejection modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const rejectionModal = document.getElementById('rejectionReasonModal');
+        if (event.target === rejectionModal) {
+            closeRejectionModal();
+        }
+    });
+});
