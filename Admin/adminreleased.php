@@ -74,59 +74,349 @@ if ($isPreview || $isPrint) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
         <title>Print Document</title>
-        <style>
-            body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#000;margin:0;padding:0;}
-            .page{max-width:800px;margin:0 auto;padding:40px 50px;}
-            .header{text-align:center;}
-            .header h1{margin:0;font-size:20px;letter-spacing:.5px;}
-            .header h2{margin:8px 0 0;font-size:16px;font-weight:600;}
-            .meta{margin-top:24px;font-size:14px;}
-            .meta .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-            .meta .row div{min-width:240px;}
-            .title{margin:26px 0 0;text-align:center;font-weight:700;font-size:18px;text-transform:uppercase;}
-            .content{margin-top:24px;font-size:14px;line-height:1.8;text-align:justify;}
-            .sig{margin-top:60px;display:flex;justify-content:flex-end;}
-            .sig .box{text-align:center;min-width:260px;}
-            .sig .line{margin-top:50px;border-top:1px solid #000;padding-top:6px;}
-            @media print{body{background:#fff;} .page{padding:0 0 0 0; margin:0; max-width:none;}}
-        </style>
     </head>
+    <style>
+        @page {
+    size: A4;
+    margin: 8mm;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #fff;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    width: 100%;
+    max-width: 190mm;
+    margin: 0 auto;
+    padding: 25px 30px;
+    background: #fff;
+    border: 1px solid #2c5aa0;
+    position: relative;
+    min-height: 240mm;
+    box-sizing: border-box;
+}
+
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #2c5aa0 0%, #1e3a6f 50%, #2c5aa0 100%);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.logo-container {
+    margin-bottom: 18px;
+}
+
+.logo-container img {
+    max-width: 70px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid #2c5aa0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e3a6f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header h2 {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2c5aa0;
+}
+
+.header h3 {
+    margin: 3px 0 0;
+    font-size: 11px;
+    font-weight: 400;
+    color: #666;
+}
+
+.official-document {
+    margin: 20px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.official-document .doc-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e3a6f;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.official-document .doc-number {
+    font-size: 11px;
+    color: #495057;
+}
+
+.title {
+    margin: 30px 0 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e3a6f;
+    text-transform: uppercase;
+    border-bottom: 2px solid #2c5aa0;
+    padding-bottom: 8px;
+}
+
+.content {
+    margin-top: 25px;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: justify;
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 3px;
+}
+
+.content strong {
+    color: #1e3a6f;
+}
+
+.content p {
+    margin: 10px 0;
+}
+
+.certification-text {
+    margin: 18px 0;
+    padding: 12px;
+    background: #e3f2fd;
+    border-left: 3px solid #2196f3;
+    border-radius: 2px;
+    font-style: italic;
+}
+
+.sig-container {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+}
+
+.sig {
+    flex: 1;
+    text-align: center;
+    max-width: 300px;
+}
+
+.sig .line {
+    margin-top: 60px;
+    border-top: 2px solid #1e3a6f;
+    padding-top: 8px;
+    font-weight: 600;
+    color: #1e3a6f;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.sig .title {
+    margin-bottom: 50px;
+    font-size: 16px;
+    color: #1e3a6f;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.sig .box div {
+    font-size: 14px;
+    color: #495057;
+    margin: 3px 0;
+    font-weight: 500;
+}
+
+.footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+    font-size: 8px;
+    color: #6c757d;
+}
+
+.footer p {
+    margin: 4px 0;
+}
+
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 70px;
+    color: rgba(44, 90, 160, 0.06);
+    font-weight: 700;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 5mm;
+    }
+
+    body {
+        background: #fff;
+        padding: 0;
+    }
+
+    .page {
+        padding: 20px 25px;
+        margin: 0;
+        max-width: none;
+        border: 1px solid #000;
+        box-shadow: none;
+        min-height: 0;
+    }
+
+    .watermark {
+        color: rgba(44, 90, 160, 0.03);
+        font-size: 50px;
+    }
+
+    .logo-container img {
+        max-width: 100px;
+    }
+
+    .header h1 {
+        font-size: 16px;
+    }
+
+    .header h2 {
+        font-size: 11px;
+    }
+
+    .header h3 {
+        font-size: 9px;
+    }
+
+    .title {
+        font-size: 13px;
+    }
+
+    .content {
+        font-size: 9px;
+        padding: 12px;
+    }
+
+    .certification-text {
+        padding: 10px;
+    }
+
+    .sig .line {
+        font-size: 8px;
+        margin-top: 45px;
+    }
+
+    .sig .box div {
+        font-size: 15px;
+    }
+
+    .sig .title {
+        font-size: 14px;
+    }
+
+    .validity-note {
+        font-size: 10px;
+    }
+
+    .footer {
+        font-size: 6px;
+    }
+}
+    </style>
     <body>
         <div class="page">
+            <div class="watermark">OFFICIAL</div>
             <div class="header">
+                <div class="logo-container">
+                    <img src="../images/brgylogo.png" alt="Barangay New Era Logo">
+                </div>
+                
+                <h2>Province of Cavite</h2>
+                <h3>CITY OF DASMARIÑAS</h3>
                 <h1>BARANGAY NEW ERA</h1>
                 <h2>Dasmariñas City, Cavite</h2>
             </div>
 
-            <div class="meta">
-                <div class="row">
-                    <div><strong>Request ID:</strong> <?php echo htmlspecialchars((string)$requestId); ?></div>
-                    <div><strong>Date Requested:</strong> <?php echo htmlspecialchars($dateRequested); ?></div>
-                </div>
-                <div class="row" style="margin-top:8px;">
-                    <div><strong>Resident:</strong> <?php echo htmlspecialchars($fullname); ?></div>
-                    <div><strong>Valid ID:</strong> <?php echo htmlspecialchars($validId); ?></div>
-                </div>
-                <div class="row" style="margin-top:8px;">
-                    <div><strong>Address:</strong> <?php echo htmlspecialchars((string)($details['Address'] ?? '')); ?></div>
-                    <div><strong>Contact:</strong> <?php echo htmlspecialchars((string)($details['ContactNumber'] ?? '')); ?></div>
-                </div>
+            <div class="official-document">
+                <div class="doc-title">OFFICE OF THE BARANGAY CAPTAIN</div>
             </div>
 
             <div class="title"><?php echo htmlspecialchars($documenttype); ?></div>
             <div class="content">
-                This is to certify that <strong><?php echo htmlspecialchars($fullname); ?></strong>, a resident of Barangay New Era,
-                requested a <strong><?php echo htmlspecialchars($documenttype); ?></strong> for the purpose of
-                <strong><?php echo htmlspecialchars($purpose); ?></strong>.
-                <br><br>
-                Issued this day upon request for whatever legal purpose it may serve.
+                <div class="certification-text">
+                    <strong>TO WHOM IT MAY CONCERN:</strong>
+                </div>
+                <p style="text-indent: 40px; font-size: 15px; font-family:Arial, 'Times New Roman', serif">
+                    This is to certify that <strong><?php echo htmlspecialchars($fullname); ?></strong>, <?php echo htmlspecialchars((string)($details['Age'] ?? '___')); ?> years of age,
+                    born on <?php echo htmlspecialchars((string)($details['Birthdate'] ?? '_______________')); ?>,
+                    and a resident of <strong><?php echo htmlspecialchars((string)($details['Address'] ?? 'Barangay New Era, Dasmariñas City, Cavite')); ?></strong>, 
+                    has personally appeared before this office on this day and requested a 
+                    <strong><?php echo htmlspecialchars($documenttype); ?></strong> for the purpose of 
+                    <strong><?php echo htmlspecialchars($purpose); ?></strong>.
+                </p>
+                <p style="text-indent: 40px; font-size: 15px; font-family:Arial, 'Times New Roman', serif">
+                    This certification is being issued upon the request of the aforementioned person for whatever legal purpose it may serve.
+                </p>
+                <p style="text-indent: 40px; font-size: 15px; font-family:Arial, 'Times New Roman', serif">
+                    Issued this <?php echo date('d') ?> day of <?php echo date('F') ?>, <?php echo date('Y') ?> at Barangay New Era, Dasmariñas City, Cavite.
+                </p>
             </div>
 
-            <div class="sig">
-                <div class="box">
-                    <div class="line">Authorized Signature</div>
+            <div class="sig-container">
+                <div class="sig">
+                    <div class="title">Certified by:</div>
+                    <div class="box">
+                        <div class="line">HON. _____________________</div>
+                        <div>Barangay Captain</div>
+                        <div>Barangay New Era</div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="validity-note">
+                <p style="text-align: center; font-size: 12px; font-weight: 300; margin-top: 30px;">
+                    <strong>NOTE:</strong> Not valid without dry seal. Valid for 3 months from date of issuance.
+                </p>
+            </div>
+
+            <div class="footer">
+                <p><strong>BARANGAY NEW ERA</strong> | Dasmariñas City, Cavite 4114</p>
+                <p>Tel: (046) 416-XXXX | Email: barangaynewera@gmail.com</p>
+                <p>This document is valid and authentic.</p>
             </div>
         </div>
         <?php echo $autoPrintScript; ?>
