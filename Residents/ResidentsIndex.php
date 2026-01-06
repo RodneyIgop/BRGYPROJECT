@@ -377,7 +377,7 @@ $residentName = isset($_SESSION['resident_name']) ? $_SESSION['resident_name'] :
                             ?>
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100 shadow-sm border-0">
-                                    <img src="../images/<?= htmlspecialchars($row['image']) ?>" class="card-img-top"
+                                    <img src="../uploaded_img/<?= htmlspecialchars($row['image']) ?>" class="card-img-top"
                                         style="height:200px;object-fit:cover;">
 
                                     <div class="card-body text-center">

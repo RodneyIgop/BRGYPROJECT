@@ -248,6 +248,11 @@ function timeAgo($datetime) {
             <img src="../images/monitor.png"> Activity Logs
         </a>
 
+        <!-- ATTENDANCE -->
+        <a href="superadminAttendance.php">
+            <img src="../images/attendance.png"> Attendance
+        </a>
+
         <!-- RESIDENT INFO -->
         <a href="superadminResidents.php">
             <img src="../images/residents.png"> Resident Information

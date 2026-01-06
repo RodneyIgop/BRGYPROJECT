@@ -445,7 +445,7 @@ footer a:hover {
       ?>
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm border-0">
-          <img src="images/<?= htmlspecialchars($row['image']) ?>" class="card-img-top" style="height:200px;object-fit:cover;">
+          <img src="uploaded_img/<?= htmlspecialchars($row['image']) ?>" class="card-img-top" style="height:200px;object-fit:cover;">
           <div class="card-body text-center">
             <small class="custom-text-color2 font-weight-bold">
               <?= date("F d, Y", strtotime($row['date'])) ?>
