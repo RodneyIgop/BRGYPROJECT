@@ -277,6 +277,7 @@ td {
     color: #333;
     word-wrap: break-word;
     max-width: 200px;
+    vertical-align: middle;
 }
 
 tbody tr {
@@ -342,10 +343,12 @@ tbody tr:last-child td {
 /* Action Buttons */
 .action-buttons {
     display: flex;
+    align-items: center;
     justify-content: center;
     gap: 8px;
     flex-wrap: wrap;
     width: 100%;
+    min-height: 40px;
 }
 
 .edit-btn, .cancel-btn {
@@ -682,6 +685,8 @@ tbody tr:last-child td {
         flex-direction: column;
         width: 100%;
         min-width: 120px;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {
@@ -735,6 +740,8 @@ tbody tr:last-child td {
         min-width: 100px;
         flex-direction: column;
         width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {
@@ -799,6 +806,8 @@ tbody tr:last-child td {
         min-width: 80px;
         flex-direction: column;
         width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {
@@ -887,6 +896,8 @@ tbody tr:last-child td {
         min-width: 70px;
         flex-direction: column;
         width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {
@@ -970,6 +981,8 @@ tbody tr:last-child td {
         min-width: 60px;
         flex-direction: column;
         width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {
@@ -1252,6 +1265,8 @@ tbody tr:last-child td {
         min-width: 100px;
         flex-direction: column;
         width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     
     .edit-btn, .cancel-btn {

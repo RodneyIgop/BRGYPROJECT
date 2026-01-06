@@ -130,10 +130,10 @@ error_log("DEBUG: fullname = " . var_export($fullname, true));
 // Use the numeric user_id for pending_requests filtering
 $effective_user_id = $numeric_user_id ?? $user_id;
 
-// Modified query to show only active requests (exclude cancelled and declined)
-$sql = "SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, notes, '' AS reason FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status NOT IN ('cancelled', 'declined')
+// Modified query to show only active requests (exclude cancelled, declined, and completed)
+$sql = "SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, notes, '' AS reason FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status NOT IN ('cancelled', 'declined', 'completed')
         UNION ALL
-        SELECT RequestID AS reqId, '' AS user_id, fullname, documenttype AS document, dateRequested, purpose, status, '' AS notes, '' AS reason FROM approved WHERE fullname = ?
+        SELECT RequestID AS reqId, '' AS user_id, fullname, documenttype AS document, dateRequested, purpose, status, '' AS notes, '' AS reason FROM approved WHERE fullname = ? AND status != 'completed'
         ORDER BY dateRequested DESC";
 
 // Debug: Show the SQL query

@@ -100,7 +100,7 @@ if (!$fullname) {
         <div class="main-content">
             <div class="page-header">
                 <h1>History</h1>
-                <p class="page-description">View your cancelled and declined document requests</p>
+                <p class="page-description">View your completed, cancelled, and declined document requests</p>
             </div>
             
             <div class="requests-table">
@@ -108,13 +108,13 @@ if (!$fullname) {
                     <table>
                         <thead>
                             <tr>
-                                <th>Full Name</th>
-                                <th>Status</th>
-                                <th>Date Requested</th>
-                                <th>Document Type</th>
-                                <th>Purpose</th>
-                                <th>Reason</th>
-                                <th>Actions</th>
+                                <th style="vertical-align: middle; text-align: left;">Full Name</th>
+                                <th style="vertical-align: middle; text-align: center;">Status</th>
+                                <th style="vertical-align: middle; text-align: left;">Date Requested</th>
+                                <th style="vertical-align: middle; text-align: left;">Document Type</th>
+                                <th style="vertical-align: middle; text-align: left;">Purpose</th>
+                                <th style="vertical-align: middle; text-align: left;">Reason</th>
+                                <th style="vertical-align: middle; text-align: center;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,17 +127,19 @@ error_log("DEBUG: fullname = " . var_export($fullname, true));
 // Use the numeric user_id for filtering
 $effective_user_id = $numeric_user_id ?? $user_id;
 
-// Query to get archived/declined/cancelled requests
-$sql = "SELECT ArchiveID AS reqId, '' AS user_id, fullname, documenttype AS document, daterequested AS dateRequested, '' AS purpose, status, reason, '' AS notes FROM archivetbl WHERE fullname = ? AND (status = 'declined' OR status = 'cancelled')
+// Query to get archived/declined/cancelled/completed requests
+$sql = "SELECT ArchiveID AS reqId, '' AS user_id, fullname, documenttype AS document, daterequested AS dateRequested, '' AS purpose, status, reason, '' AS notes FROM archivetbl WHERE fullname = ? AND (status = 'declined' OR status = 'cancelled' OR status = 'completed')
         UNION ALL
-        SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, notes, '' AS reason FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status = 'declined'
+        SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, '' AS reason, notes FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status = 'declined'
+        UNION ALL
+        SELECT RequestID AS reqId, '' AS user_id, fullname, documenttype AS document, dateRequested, purpose, status, '' AS reason, '' AS notes FROM approved WHERE fullname = ? AND status = 'completed'
         ORDER BY dateRequested DESC";
 
 // Debug: Show the SQL query
 error_log("DEBUG: SQL = " . $sql);
 
 $query = $conn->prepare($sql);
-$query->bind_param('sss', $fullname, $fullname, $effective_user_id);
+$query->bind_param('ssss', $fullname, $fullname, $effective_user_id, $fullname);
 
 // Debug: Show bound parameters
 error_log("DEBUG: Bound params - fullname: $fullname, effective_user_id: $effective_user_id");
@@ -150,18 +152,21 @@ error_log("DEBUG: Number of rows found: " . ($rows ? $rows->num_rows : 0));
 if ($rows && $rows->num_rows > 0) {
     while ($row = $rows->fetch_assoc()) {
         echo '<tr>';
-        echo '<td>'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
+        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
         $displayStatus = $row['status'];
         if($row['status']==='declined') $displayStatus = 'declined';
         elseif($row['status']==='cancelled') $displayStatus = 'cancelled';
-        echo '<td><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
-        echo '<td>'.htmlspecialchars($row['dateRequested']).'</td>';
-        echo '<td>'.htmlspecialchars($row['document']).'</td>';
-        echo '<td>'.htmlspecialchars($row['purpose'] ?? 'N/A').'</td>';
-        echo '<td>'.htmlspecialchars($row['reason'] ?? 'N/A').'</td>';
-        echo '<td class="action-buttons">';
+        elseif($row['status']==='completed') $displayStatus = 'completed';
+        echo '<td style="vertical-align: middle; text-align: center;"><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';
+        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['dateRequested']).'</td>';
+        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['document']).'</td>';
+        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['purpose'] ?? 'N/A').'</td>';
+        echo '<td style="vertical-align: middle; text-align: left;">'.htmlspecialchars($row['reason'] ?? 'N/A').'</td>';
+        echo '<td class="action-buttons" style="vertical-align: middle; text-align: center;">';
         if(($row['status']==='declined' || $row['status']==='cancelled') && !empty($row['reason'])){
             echo '<button class="edit-btn reason-btn" data-reason="'.htmlspecialchars($row['reason'],ENT_QUOTES).'" data-id="'.htmlspecialchars($row['reqId']).'">View Reason</button>';
+        }elseif($row['status']==='completed'){
+            echo '<button class="edit-btn" disabled>Completed</button>';
         }else{
             echo '<button class="edit-btn" disabled>No Actions</button>';
         }
