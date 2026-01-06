@@ -464,10 +464,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             popup.classList.add('show');
             popup.classList.remove('hide');
             
-            // Auto-hide after 3 seconds
+            // Auto-hide after 1.5 seconds
             setTimeout(() => {
                 hidePopup();
-            }, 3000);
+            }, 1500);
         }
 
         function hidePopup() {
