@@ -94,18 +94,145 @@ window.onclick = function(event) {
     }
 }
 
-function blockAdmin(adminId) {
-    if(confirm('Are you sure you want to block this admin account: ' + adminId + '?')) {
-        // TODO: Implement block admin functionality via AJAX
-        alert('Admin ' + adminId + ' has been blocked');
-        // TODO: Update table to show blocked status
+function toggleBlockAdmin(button) {
+    console.log('toggleBlockAdmin called');
+    const adminId = button.dataset.adminId;
+    const name = button.dataset.adminName;
+    const currentStatus = button.dataset.currentStatus;
+    
+    console.log('Data:', { adminId, name, currentStatus });
+    
+    const isCurrentlyBlocked = currentStatus === 'blocked';
+    const action = isCurrentlyBlocked ? 'unblock' : 'block';
+    const actionText = isCurrentlyBlocked ? 'unblock' : 'block';
+    
+    console.log('Action:', { action, actionText, isCurrentlyBlocked });
+    
+    if (confirm(`Are you sure you want to ${actionText} this admin account?\n\nName: ${name}\nAdmin ID: ${adminId}`)) {
+        console.log('User confirmed action');
+        // Disable button to prevent multiple clicks
+        button.disabled = true;
+        button.textContent = 'Processing...';
+        
+        // Send AJAX request
+        console.log('Sending AJAX request to viewadminaccs.php');
+        fetch('viewadminaccs.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `admin_id=${encodeURIComponent(adminId)}&action=${encodeURIComponent(action)}`
+        })
+        .then(response => {
+            console.log('Response received:', response.status);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(text => {
+            console.log('Response text:', text);
+            // Since viewadminaccs.php redirects on success, we need to handle this differently
+            // Check if response contains HTML (indicating a redirect)
+            if (text.includes('<!DOCTYPE html>') || text.includes('<html')) {
+                // Success - redirect to show success message
+                const actionText = action === 'block' ? 'block' : 'unblock';
+                const redirectUrl = `viewadminaccs.php?status=${actionText}&success=1&email=1`;
+                window.location.href = redirectUrl;
+            } else {
+                // Try to parse as JSON in case of error
+                try {
+                    const data = JSON.parse(text);
+                    console.log('Data received:', data);
+                    if (data.success) {
+                        // Update button and status in the table
+                        const row = button.closest('tr');
+                        const statusCell = row.cells[4]; // Status column (index 4 for admin table)
+                        const statusSpan = statusCell.querySelector('.status');
+                        
+                        if (action === 'block') {
+                            // Update to blocked state
+                            button.textContent = 'Unblock';
+                            button.className = 'action-btn unblock-btn';
+                            button.dataset.currentStatus = 'blocked';
+                            statusSpan.className = 'status blocked';
+                            statusSpan.textContent = 'Blocked';
+                        } else {
+                            // Update to active state
+                            button.textContent = 'Block';
+                            button.className = 'action-btn block-btn';
+                            button.dataset.currentStatus = 'active';
+                            statusSpan.className = 'status active';
+                            statusSpan.textContent = 'Active';
+                        }
+                        
+                        // Show success message
+                        showNotification(data.message, 'success');
+                    } else {
+                        // Show error message
+                        showNotification(data.message || 'An error occurred', 'error');
+                    }
+                } catch (e) {
+                    console.error('Failed to parse response:', e);
+                    // If we can't parse response, assume it was successful and redirect
+                    const actionText = action === 'block' ? 'block' : 'unblock';
+                    const redirectUrl = `viewadminaccs.php?status=${actionText}&success=1&email=1`;
+                    window.location.href = redirectUrl;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('An error occurred while processing your request', 'error');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+        });
+    } else {
+        console.log('User cancelled action');
     }
 }
 
-function unblockAdmin(adminId) {
-    if(confirm('Are you sure you want to unblock this admin account: ' + adminId + '?')) {
-        // TODO: Implement unblock admin functionality via AJAX
-        alert('Admin ' + adminId + ' has been unblocked');
-        // TODO: Update table to show active status
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    // Style the notification
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        padding: '15px 20px',
+        borderRadius: '5px',
+        color: 'white',
+        fontWeight: 'bold',
+        zIndex: '10000',
+        maxWidth: '300px',
+        wordWrap: 'break-word'
+    });
+    
+    // Set background color based on type
+    switch(type) {
+        case 'success':
+            notification.style.backgroundColor = '#28a745';
+            break;
+        case 'error':
+            notification.style.backgroundColor = '#dc3545';
+            break;
+        default:
+            notification.style.backgroundColor = '#17a2b8';
     }
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
 }

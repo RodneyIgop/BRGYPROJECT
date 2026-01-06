@@ -6,7 +6,7 @@ if (!isset($_SESSION['superadmin_id'])) {
 }
 
 // Database connection
-require_once '../Connection/Conn.php';
+require_once '../Connection/conn.php';
 $db = $conn; // Use the global connection variable from Conn.php
 
 // Fetch resident accounts from database
@@ -66,7 +66,9 @@ try {
                 <div class="error-message">
                     <?php echo htmlspecialchars($error_message); ?>
                 </div>
-            <?php else: ?>
+            <?php endif; ?>
+            
+            <?php if (!isset($error_message)): ?>
                 <div class="table-container">
                     <table class="admin-table">
                         <thead>

@@ -220,6 +220,65 @@ body {
     margin: 0;
 }
 
+/* Filter Section */
+.filter-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-controls label {
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.filter-controls .form-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+.filter-controls .form-select:focus {
+    outline: none;
+    border-color: #00386b;
+    box-shadow: 0 0 0 3px rgba(0, 56, 107, 0.1);
+    background-color: #fff;
+}
+
+.filter-controls .btn-secondary {
+    background-color: #64748b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(100, 116, 139, 0.2);
+}
+
+.filter-controls .btn-secondary:hover {
+    background-color: #475569;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(100, 116, 139, 0.3);
+}
+
 /* Table Styles */
 .requests-table {
     background: white;
@@ -642,6 +701,33 @@ tbody tr:last-child td {
 
 /* Mobile Table Optimizations */
 @media (max-width: 768px) {
+    .filter-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .filter-controls {
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .filter-controls label {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .filter-controls .form-select {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    
+    .filter-controls .btn-secondary {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
     .table-responsive {
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);

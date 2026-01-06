@@ -104,19 +104,27 @@ window.onclick = function(event) {
 }
 
 function toggleBlockResident(button) {
+    console.log('toggleBlockResident called');
     const uid = button.dataset.uid;
     const name = button.dataset.name;
     const currentStatus = button.dataset.currentStatus;
+    
+    console.log('Data:', { uid, name, currentStatus });
+    
     const isCurrentlyBlocked = currentStatus === 'blocked';
     const action = isCurrentlyBlocked ? 'unblock' : 'block';
     const actionText = isCurrentlyBlocked ? 'unblock' : 'block';
     
+    console.log('Action:', { action, actionText, isCurrentlyBlocked });
+    
     if (confirm(`Are you sure you want to ${actionText} this resident account?\n\nName: ${name}\nUID: ${uid}`)) {
+        console.log('User confirmed action');
         // Disable button to prevent multiple clicks
         button.disabled = true;
         button.textContent = 'Processing...';
         
         // Send AJAX request
+        console.log('Sending AJAX request to block_resident.php');
         fetch('block_resident.php', {
             method: 'POST',
             headers: {
@@ -124,8 +132,12 @@ function toggleBlockResident(button) {
             },
             body: `resident_uid=${encodeURIComponent(uid)}&action=${encodeURIComponent(action)}`
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response received:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Data received:', data);
             if (data.success) {
                 // Update button and status in the table
                 const row = button.closest('tr');
@@ -163,6 +175,8 @@ function toggleBlockResident(button) {
             // Re-enable button
             button.disabled = false;
         });
+    } else {
+        console.log('User cancelled action');
     }
 }
 
@@ -206,7 +220,7 @@ function showNotification(message, type = 'info') {
         if (notification.parentNode) {
             notification.parentNode.removeChild(notification);
         }
-    }, 3000);
+    }, 5000);
 }
 
 function blockResident(userId) {

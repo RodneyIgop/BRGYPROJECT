@@ -103,6 +103,20 @@ if (!$fullname) {
                 <p class="page-description">View your completed, cancelled, and declined document requests</p>
             </div>
             
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-controls">
+                    <label for="statusFilter">Filter by Status:</label>
+                    <select id="statusFilter" class="form-select" style="width: 200px; display: inline-block;">
+                        <option value="">All Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="declined">Declined</option>
+                    </select>
+                    <button id="clearFilter" class="btn btn-secondary btn-sm ms-2">Clear Filter</button>
+                </div>
+            </div>
+            
             <div class="requests-table">
                 <div class="table-responsive">
                     <table>
@@ -117,7 +131,7 @@ if (!$fullname) {
                                 <th style="vertical-align: middle; text-align: center;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="archiveTableBody">
 <?php
 // Debug: Show current session values
 error_log("DEBUG: uid_string = " . var_export($uid_string, true));
@@ -127,12 +141,21 @@ error_log("DEBUG: fullname = " . var_export($fullname, true));
 // Use the numeric user_id for filtering
 $effective_user_id = $numeric_user_id ?? $user_id;
 
+// Get filter status from GET parameter
+$status_filter = isset($_GET['status']) ? $_GET['status'] : '';
+
+// Build WHERE clause for status filter
+$status_where = "";
+if (!empty($status_filter)) {
+    $status_where = " AND status = '" . $conn->real_escape_string($status_filter) . "'";
+}
+
 // Query to get archived/declined/cancelled/completed requests
-$sql = "SELECT ArchiveID AS reqId, '' AS user_id, fullname, documenttype AS document, daterequested AS dateRequested, '' AS purpose, status, reason, '' AS notes FROM archivetbl WHERE fullname = ? AND (status = 'declined' OR status = 'cancelled' OR status = 'completed')
+$sql = "SELECT ArchiveID AS reqId, '' AS user_id, fullname, documenttype AS document, daterequested AS dateRequested, '' AS purpose, status, reason, '' AS notes FROM archivetbl WHERE fullname = ? AND (status = 'declined' OR status = 'cancelled' OR status = 'completed')$status_where
         UNION ALL
-        SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, '' AS reason, notes FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status = 'declined'
+        SELECT id AS reqId, user_id, fullname, document_type AS document, date_requested AS dateRequested, purpose, status, '' AS reason, notes FROM pending_requests WHERE (fullname = ? OR user_id = ?) AND status = 'declined'$status_where
         UNION ALL
-        SELECT RequestID AS reqId, '' AS user_id, fullname, documenttype AS document, dateRequested, purpose, status, '' AS reason, '' AS notes FROM approved WHERE fullname = ? AND status = 'completed'
+        SELECT RequestID AS reqId, '' AS user_id, fullname, documenttype AS document, dateRequested, purpose, status, '' AS reason, '' AS notes FROM approved WHERE fullname = ? AND status = 'completed'$status_where
         ORDER BY dateRequested DESC";
 
 // Debug: Show the SQL query
@@ -208,5 +231,38 @@ if ($rows && $rows->num_rows > 0) {
     </div>
 
     <script src="archive.js"></script>
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('statusFilter');
+            const clearFilter = document.getElementById('clearFilter');
+            
+            // Set current filter value if exists
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentStatus = urlParams.get('status');
+            if (currentStatus) {
+                statusFilter.value = currentStatus;
+            }
+            
+            // Handle filter change
+            statusFilter.addEventListener('change', function() {
+                const currentUrl = new URL(window.location);
+                if (this.value) {
+                    currentUrl.searchParams.set('status', this.value);
+                } else {
+                    currentUrl.searchParams.delete('status');
+                }
+                window.location.href = currentUrl.toString();
+            });
+            
+            // Handle clear filter
+            clearFilter.addEventListener('click', function() {
+                statusFilter.value = '';
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.delete('status');
+                window.location.href = currentUrl.toString();
+            });
+        });
+    </script>
 </body>
 </html>
