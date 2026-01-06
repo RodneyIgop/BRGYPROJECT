@@ -188,13 +188,6 @@
     .login .back-home:hover {
       text-decoration: underline;
     }
-
-    .login p.error-msg {
-      color: red;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
-    }
-
     .password-group {
       position: relative;
     }
@@ -281,7 +274,14 @@
       font-size: 20px;
       animation: checkmark 0.6s ease-in-out;
     }
-
+     .error-msg {
+            color: #d9534f;
+            margin-bottom: 15px;
+            font-weight: 500;
+            background-color: #f8d7da;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
     @keyframes checkmark {
       0% { transform: scale(0) rotate(45deg); }
       50% { transform: scale(1.2) rotate(45deg); }
@@ -345,6 +345,15 @@
 
       <form method="POST" action="residentLoginProcess.php">
         <h1>Login Now</h1>
+          <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid'): ?>
+          <p class="error-msg">Invalid email or password.</p>
+        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'empty'): ?>
+          <p class="error-msg">Please fill in all fields.</p>
+        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'blocked'): ?>
+          <p class="error-msg">Your account has been blocked by the Super Administrator. You will not be able to access the system until your account is unblocked.</p>
+        <?php elseif (isset($_GET['success']) && $_GET['success'] == 'password_reset'): ?>
+          <p class="success-msg" style="color: green;">Password reset successfully! Please login with your new password.</p>
+        <?php endif; ?>
 
         <label class="label">User ID</label>
         <span><input type="text" name="userID" class="userID" placeholder="Enter User ID" required></span>
@@ -358,16 +367,7 @@
           </span>
         </div>
 
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid'): ?>
-          <p class="error-msg">Invalid email or password.</p>
-        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'empty'): ?>
-          <p class="error-msg">Please fill in all fields.</p>
-        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'blocked'): ?>
-          <p class="error-msg">Your account has been blocked. Please contact the barangay administrator for assistance.</p>
-        <?php elseif (isset($_GET['success']) && $_GET['success'] == 'password_reset'): ?>
-          <p class="success-msg" style="color: green;">Password reset successfully! Please login with your new password.</p>
-        <?php endif; ?>
-
+      
         <div class="checkrow">
           <div>
             <a href="forgotPassword.php" class="forgot-password">Forgot Password?</a>
