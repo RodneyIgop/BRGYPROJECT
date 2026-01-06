@@ -1583,3 +1583,33 @@ input:checked + .slider:before {
         border-width: 3px;
     }
 }
+
+/* Hide Other option in rejection modal */
+.rejection-reasons label:has(input[value="Other"]) {
+    display: none !important;
+}
+
+.rejection-reasons label:has(input[value="Other"]) + * {
+    display: none !important;
+}
+
+#otherReasonContainer {
+    display: none !important;
+}
+
+/* Additional hiding for Other option */
+.rejection-reasons input[value="Other"] {
+    display: none !important;
+}
+
+.rejection-reasons input[value="Other"] ~ * {
+    display: none !important;
+}
+
+.rejection-reasons .reason-option:nth-child(5) {
+    display: none !important;
+}
+
+.rejection-reasons .reason-option:nth-child(5) * {
+    display: none !important;
+}

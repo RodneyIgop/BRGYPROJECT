@@ -1405,3 +1405,32 @@ body {
         width: 100%;
     }
 }
+
+/* Hide Other option in rejection modal */
+.rejection-reasons label:has(input[value="Other"]) {
+    display: none !important;
+}
+
+.rejection-reasons label:has(input[value="Other"]) + * {
+    display: none !important;
+}
+
+#otherReasonContainer {
+    display: none !important;
+}
+
+.rejection-reasons input[value="Other"] {
+    display: none !important;
+}
+
+.rejection-reasons input[value="Other"] ~ * {
+    display: none !important;
+}
+
+.rejection-reasons .reason-option:nth-child(5) {
+    display: none !important;
+}
+
+.rejection-reasons .reason-option:nth-child(5) * {
+    display: none !important;
+}
