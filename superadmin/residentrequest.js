@@ -125,7 +125,7 @@ function acceptRequest() {
     });
     
     console.log('Generated params:', params.toString());
-    window.location.href = `generateResidentID.php?${params.toString()}`;
+    window.location.href = `generateUID.php?${params.toString()}`;
 }
 
 function rejectRequest(requestId, button) {
@@ -141,7 +141,7 @@ function rejectRequest(requestId, button) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Request ' + requestId + ' has been rejected successfully');
+                alert(data.message);
                 // Remove the row from the table
                 const row = button.closest('tr');
                 if (row) {

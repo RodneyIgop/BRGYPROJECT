@@ -132,7 +132,7 @@ function rejectRequest(requestId, event) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Request ' + requestId + ' has been rejected successfully');
+                alert(data.message);
                 // Remove the row from the table
                 const row = event.target.closest('tr');
                 if (row) {
