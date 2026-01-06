@@ -263,7 +263,7 @@ try {
                                     
                                     // Determine validation status and styling based on match result
                                     if ($nameMatch) {
-                                        $validationBadge = '<span class="badge bg-warning">⚠ match in the residents list</span>';
+                                        $validationBadge = '<span class="badge bg-success">✓ match in the residents list</span>';
                                         $canApprove = true;
                                     } else {
                                         $validationBadge = '<span class="badge bg-danger">❌ doesnt match any in the residents list</span>';
