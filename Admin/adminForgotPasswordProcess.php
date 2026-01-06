@@ -85,30 +85,35 @@ try {
     
     $mail->Body = '
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <img src="/era/images/taosaharap.png" alt="Barangay New Era Logo" style="width: 80px;">
-                <h2 style="color: #014A7F; margin: 10px 0;">Barangay New Era</h2>
+            
+            <div style="background-color: #014A7F; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0; font-size: 24px;">🔐 Barangay New Era</h1>
+                <p style="margin: 5px 0 0 0; opacity: 0.9;">Admin Password Reset</p>
             </div>
             
-            <h3 style="color: #333;">Admin Password Reset Request</h3>
-            
-            <p>Dear ' . htmlspecialchars($user['firstname'] . ' ' . htmlspecialchars($user['lastname'])) . ',</p>
-            
-            <p>We received a request to reset your password for your Barangay New Era admin account. Your verification code is:</p>
-            
-            <div style="background-color: #f8f9fa; border: 2px solid #014A7F; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
-                <h1 style="color: #014A7F; font-size: 32px; margin: 0; letter-spacing: 3px;">' . $verification_code . '</h1>
-            </div>
-            
-            <p><strong>This code will expire in 10 minutes.</strong></p>
-            
-            <p>If you didn\'t request this password reset, please ignore this email. Your password will remain unchanged.</p>
-            
-            <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin-top: 30px;">
-                <p style="margin: 0; font-size: 14px; color: #666;">
-                    <strong>Security Notice:</strong> Never share this verification code with anyone. 
-                    Barangay New Era staff will never ask for your password or verification code.
+            <div style="background-color: #f8f9fa; padding: 30px; border: 1px solid #ddd; border-top: none;">
+                
+                <p>Dear ' . htmlspecialchars($user['firstname'] . ' ' . htmlspecialchars($user['lastname'])) . ',</p>
+                
+                <p>We received a request to reset your password for your Barangay New Era admin account. Your verification code is:</p>
+                
+                <div style="background-color: #f8f9fa; border: 2px solid #014A7F; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                    <h1 style="color: #014A7F; font-size: 32px; margin: 0; letter-spacing: 3px;">' . $verification_code . '</h1>
+                </div>
+                
+                <p style="color: #dc3545; font-weight: bold; text-align: center; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin: 20px 0;">
+                    ⚠️ <strong>Don\'t share this code to anyone.</strong>
                 </p>
+                
+                <p><strong>Important:</strong></p>
+                <ul>
+                    <li>This code will expire in 10 minutes for security reasons</li>
+                    <li>Never share this code with anyone</li>
+                    <li>If you didn\'t request this password reset, please ignore this email</li>
+                </ul>
+                
+                <p>If you have any questions, please contact the barangay office.</p>
+                
             </div>
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 12px; color: #888;">
@@ -118,7 +123,7 @@ try {
         </div>
     ';
 
-    $mail->AltBody = 'Your admin password reset verification code is: ' . $verification_code . '. This code expires in 10 minutes. If you didn\'t request this, please ignore this email.';
+    $mail->AltBody = 'Your admin password reset verification code is: ' . $verification_code . '. This code expires in 10 minutes. ⚠️ Don\'t share this code to anyone. If you didn\'t request this, please ignore this email.';
 
     $mail->send();
     

@@ -156,7 +156,7 @@ if ($rows && $rows->num_rows > 0) {
         echo '<td>'.htmlspecialchars($row['fullname'] ?? $fullname).'</td>';
         $displayStatus = $row['status'];
         if($row['status']==='pending') $displayStatus = 'in process';
-        elseif($row['status']==='approved' || $row['status']==='under_review') $displayStatus = 'approved and for pick-up';
+        elseif($row['status']==='approved' || $row['status']==='under_review') $displayStatus = 'approved and ready for pick up';
         elseif($row['status']==='completed') $displayStatus = 'completed';
         elseif($row['status']==='declined') $displayStatus = 'declined';
         echo '<td><span class="status '.htmlspecialchars($row['status']).'">'.ucfirst($displayStatus).'</span></td>';

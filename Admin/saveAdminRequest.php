@@ -109,7 +109,7 @@ try {
     // Content
     $mail->isHTML(true);
     $mail->Subject = 'Barangay New Era - Admin Verification Code';
-    $mail->Body    = 'Your verification code is <strong>' . $code . '</strong>. The code expires in 10 minutes.';
+    $mail->Body    = 'Your verification code is <strong>' . $code . '</strong>. The code expires in 10 minutes.<br><br><strong style="color: #dc3545;">⚠️ Don\'t share this code to anyone.</strong><br><br>If you didn\'t request this code, please ignore this email.';
 
     $mail->send();
     

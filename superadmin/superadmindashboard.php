@@ -132,6 +132,48 @@ try {
     error_log("Error fetching notifications: " . $e->getMessage());
 }
 
+// Fetch account statistics for Account Management card
+$accepted_admin_accounts = 0;
+$pending_admin_accounts = 0;
+$accepted_resident_accounts = 0;
+$pending_resident_accounts = 0;
+
+try {
+    // Count accepted admin accounts (active status)
+    $accepted_admin_query = "SELECT COUNT(*) as count FROM admintbl WHERE status = 'active'";
+    $accepted_admin_result = $conn->query($accepted_admin_query);
+    if ($accepted_admin_result && $accepted_admin_result->num_rows > 0) {
+        $row = $accepted_admin_result->fetch_assoc();
+        $accepted_admin_accounts = $row['count'];
+    }
+    
+    // Count pending admin requests
+    $pending_admin_query = "SELECT COUNT(*) as count FROM adminrequests";
+    $pending_admin_result = $conn->query($pending_admin_query);
+    if ($pending_admin_result && $pending_admin_result->num_rows > 0) {
+        $row = $pending_admin_result->fetch_assoc();
+        $pending_admin_accounts = $row['count'];
+    }
+    
+    // Count accepted resident accounts (active status)
+    $accepted_resident_query = "SELECT COUNT(*) as count FROM usertbl WHERE status = 'active'";
+    $accepted_resident_result = $conn->query($accepted_resident_query);
+    if ($accepted_resident_result && $accepted_resident_result->num_rows > 0) {
+        $row = $accepted_resident_result->fetch_assoc();
+        $accepted_resident_accounts = $row['count'];
+    }
+    
+    // Count pending resident requests
+    $pending_resident_query = "SELECT COUNT(*) as count FROM userrequest WHERE status = 'pending'";
+    $pending_resident_result = $conn->query($pending_resident_query);
+    if ($pending_resident_result && $pending_resident_result->num_rows > 0) {
+        $row = $pending_resident_result->fetch_assoc();
+        $pending_resident_accounts = $row['count'];
+    }
+} catch (Exception $e) {
+    error_log("Error fetching account statistics: " . $e->getMessage());
+}
+
 // Helper function to calculate time ago
 function timeAgo($datetime) {
     $time = strtotime($datetime);
@@ -313,6 +355,10 @@ function timeAgo($datetime) {
             </div>
             <div class="card-description">
                 Manage admin approvals, promotions, and account access restrictions.
+            </div>
+            <div class="card-total">
+                <a href="superadminAdminAccs.php" style="color: #014A7F;text-decoration:none;">Admin Accounts - Pending: <?php echo (int)$pending_admin_accounts; ?></a><br>
+                <a href="superadminUserAccs.php" style="color: #014A7F;text-decoration:none;">Resident Accounts - Pending: <?php echo (int)$pending_resident_accounts; ?></a>
             </div>
             <a href="superadminAdminAccs.php" class="card-link">Open →</a>
         </div>
