@@ -49,7 +49,7 @@ function sendRejectionEmail($email, $fullName, $requestType, $requestId) {
         $mail->Body = '
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                 <div style="text-align: center; margin-bottom: 30px;">
-                    <img src="/era/images/taosaharap.png" alt="Barangay New Era Logo" style="width: 80px;">
+                    <img src="../images/brgylogo.png" alt="Barangay New Era Logo" style="width: 80px;">
                     <h2 style="color: #014A7F; margin: 10px 0;">Barangay New Era</h2>
                 </div>
                 

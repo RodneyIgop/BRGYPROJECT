@@ -139,6 +139,24 @@ button.register:hover {
     background-color: #01365d;
 }
 
+button.ok-button {
+    width: auto;
+    min-width: 120px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+button.ok-button:hover {
+    background-color: #218838;
+}
+
 .error-msg {
     color: #d9534f;
     margin-bottom: 20px;
@@ -174,9 +192,7 @@ button.register:hover {
         <div class="alert alert-success">
             Your account is under review by the SuperAdmin. They will send your User ID to your email.
         </div>
-        <script>
-            setTimeout(() => { window.location.href = 'residentlogin.php'; }, 3500);
-        </script>
+        <button onclick="window.location.href='residentlogin.php'" class="ok-button">OK</button>
     <?php else: ?>
         <?php if ($error): ?>
             <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
