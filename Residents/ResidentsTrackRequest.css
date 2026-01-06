@@ -786,6 +786,19 @@ tbody tr:last-child td {
         border-bottom: none;
         justify-content: center;
         padding-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    tbody tr td:last-child::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #00386b;
+        font-size: 12px;
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: 0;
     }
     
     /* Add labels before each data point */
@@ -808,9 +821,9 @@ tbody tr:last-child td {
     
     /* Action buttons in cards */
     .action-buttons {
-        gap: 8px;
+        gap: 6px;
         flex-direction: row;
-        width: 100%;
+        width: auto;
         justify-content: center;
         min-height: auto;
     }
@@ -1398,6 +1411,19 @@ tbody tr:last-child td {
         border-bottom: none;
         justify-content: center;
         padding-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    tbody tr td:last-child::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #00386b;
+        font-size: 11px;
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: 0;
     }
     
     /* Labels for mobile cards */
@@ -1422,7 +1448,7 @@ tbody tr:last-child td {
     .action-buttons {
         gap: 6px;
         flex-direction: row;
-        width: 100%;
+        width: auto;
         justify-content: center;
         min-height: auto;
     }
