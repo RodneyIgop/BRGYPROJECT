@@ -5,6 +5,7 @@ $(document).ready(function() {
         changeYear: true,
         yearRange: "-100:+0",
         dateFormat: "mm/dd/yy",
+        maxDate: 0,
         onSelect: function(selectedDate) {
             calculateAge(selectedDate);
         }
@@ -249,6 +250,9 @@ if (form.length) {
         const m = today.getMonth() - birthDate.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             age--;
+        }
+        if (age < 0) {
+            age = 0;
         }
         $('#age').val(age);
         $('#age_display').val(age);
