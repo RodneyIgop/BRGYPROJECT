@@ -176,8 +176,10 @@ function updateRegister() {
     
     const termsAccepted = termsCheckbox.is(':checked');
     const passwordsMatch = password.val() === confirmPassword.val() || confirmPassword.val() === '';
+    const age = parseInt($('#age').val()) || 0;
+    const ageValid = age > 0;
     
-    if (allRequiredFilled && termsAccepted && passwordsMatch) {
+    if (allRequiredFilled && termsAccepted && passwordsMatch && ageValid) {
         registerBtn.prop('disabled', false).css('background', '#014A7F');
     } else {
         registerBtn.prop('disabled', true).css('background', '#ccc');

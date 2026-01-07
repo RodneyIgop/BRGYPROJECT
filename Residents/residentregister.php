@@ -88,7 +88,7 @@ if (isset($_GET['success'])) {
         .register-section {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center;c
             min-height: 100vh;
             padding-top: 70px;
         }
