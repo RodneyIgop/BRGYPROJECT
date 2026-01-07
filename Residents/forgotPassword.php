@@ -171,11 +171,15 @@
     }
 
     .forgot p.error-msg {
-      color: red;
       font-size: 0.85rem;
       margin-bottom: 8px;
+      font-weight: 500;
+      background-color: #f8d7da;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border-left: 4px solid #dc3545;
+      display: inline-block;
     }
-
     .forgot p.success-msg {
       color: green;
       font-size: 0.85rem;
@@ -262,11 +266,11 @@
         <p>Enter your email address and we'll send you a verification code to reset your password.</p>
 
         <?php if (isset($_GET['error']) && $_GET['error'] == 'email_not_found'): ?>
-          <p class="error-msg">Email address not found in our system.</p>
+          <p class="error-msg" style="color: red;">Email address not found in our system.</p>
         <?php elseif (isset($_GET['error']) && $_GET['error'] == 'email_sent_failed'): ?>
-          <p class="error-msg">Failed to send verification email. Please try again.</p>
+          <p class="error-msg" style="color: red;">Failed to send verification email. Please try again.</p>
         <?php elseif (isset($_GET['success']) && $_GET['success'] == 'email_sent'): ?>
-          <p class="success-msg">Verification code sent! Please check your email.</p>
+          <p class="success-msg" style="color: green;">Verification code sent! Please check your email.</p>
         <?php endif; ?>
 
         <label class="label">Email Address</label>
@@ -325,6 +329,7 @@
           // Show error message
           const errorDiv = document.createElement('div');
           errorDiv.className = 'error-msg';
+          errorDiv.style.color = 'red';
           errorDiv.textContent = data.message;
           
           // Remove existing error messages
