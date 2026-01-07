@@ -254,9 +254,14 @@ $_SESSION['password_reset'] = [
     }
 
     .verify p.error-msg {
-      color: red;
       font-size: 0.85rem;
       margin-bottom: 8px;
+      font-weight: 500;
+      background-color: #f8d7da;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border-left: 4px solid #dc3545;
+      display: inline-block;
     }
 
     .verify p.success-msg {
@@ -352,14 +357,15 @@ $_SESSION['password_reset'] = [
         <p>We've sent a 6-digit verification code to:</p>
         
         <div class="email-display"><?php echo htmlspecialchars($email); ?></div>
+            <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid_code'): ?>
+          <p class="error-msg" style="color: red;">Invalid verification code. Please try again.</p>
+        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'expired'): ?>
+          <p class="error-msg" style="color: red;">Verification code has expired. Please request a new one.</p>
+        <?php endif; ?>
         
         <div class="timer" id="timer">Code expires in: <span id="countdown">10:00</span></div>
 
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid_code'): ?>
-          <p class="error-msg">Invalid verification code. Please try again.</p>
-        <?php elseif (isset($_GET['error']) && $_GET['error'] == 'expired'): ?>
-          <p class="error-msg">Verification code has expired. Please request a new one.</p>
-        <?php endif; ?>
+    
 
         <div class="code-inputs">
           <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
@@ -492,6 +498,7 @@ $_SESSION['password_reset'] = [
           // Show error message
           const errorDiv = document.createElement('div');
           errorDiv.className = 'error-msg';
+          errorDiv.style.color = 'red';
           errorDiv.textContent = data.message;
           
           // Remove existing error messages

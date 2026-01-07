@@ -47,15 +47,14 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $stmt->close();
 
-if ($row && password_verify($new_password, $row['Password'])) {
+if ($row && $new_password === $row['Password']) {
     echo json_encode(['success' => false, 'message' => 'New password cannot be the same as your current password']);
     exit;
 }
 
 // Update password in database
-$hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 $stmt = $conn->prepare('UPDATE usertbl SET Password = ? WHERE email = ?');
-$stmt->bind_param('ss', $hashed_password, $email);
+$stmt->bind_param('ss', $new_password, $email);
 
 if ($stmt->execute()) {
     $stmt->close();
